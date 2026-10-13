@@ -1,9 +1,5 @@
 
 
-. "./RosettaStudentAssociation.ps1"
-. "./RosettaEmployeeAssociation.ps1"
-
-
 class RosettaPerson
 {
 

@@ -3,11 +3,8 @@
     project: UCD-COE-Rosetta-Client
 #>
 
-#Import Required Rosetta Classes
-using module ./Rosetta/RosettaAPIWorker.ps1
-using module ./Rosetta/RosettaPeopleSearchBy.ps1
-using module ./Rosetta/RosettaPerson.ps1
-
+#Import Rosetta Module
+using module ./Rosetta/Rosetta.psm1
 
 #Initialize Rosetta API Worker
 $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -AsPlainText -Vault "UCD-Identities"),
@@ -16,11 +13,7 @@ $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -
                                           (Get-Secret -Name "Rosetta-Client-Secret" -AsPlainText -Vault "UCD-Identities"));
 
 
-$tstPerson = [RosettaPerson]::new()
-
-$tstPerson.DisplayName;
-
-$tstPerson.EmployeeAssociations;
+                                          
 
 
 

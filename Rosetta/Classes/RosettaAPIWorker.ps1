@@ -1,6 +1,4 @@
 
-. "./RosettaPeopleSearchBy.ps1"
-. "./RosettaPerson.ps1"
 
 class RosettaAPIWorker
 {
