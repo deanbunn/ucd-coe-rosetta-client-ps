@@ -22,3 +22,13 @@ $lDepartments = $rosettaAPIWrkr.GetDepartments();
 
 #Export Department Listing to CSV in Local Directory
 $lDepartments | Export-Csv -Path ("Rosetta_Departments_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
+
+#########################
+# Job Type IDs Listing
+#########################
+
+#Pull Listing of Rosetta Job Type IDs
+$lJobTypeIDs = $rosettaAPIWrkr.GetJobTypeIDs();
+
+#Export Job Type IDs Listing to CSV in Local Directory
+$lJobTypeIDs | Export-Csv -Path ("Rosetta_JobTypeIDs_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;

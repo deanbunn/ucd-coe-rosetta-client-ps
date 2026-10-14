@@ -366,6 +366,7 @@ class RosettaAPIWorker
 
     }
 
+    # Get Departments Information
     [System.Collections.Generic.List[RosettaDepartment]] GetDepartments()
     {
         #Var for Return List Type
@@ -377,7 +378,7 @@ class RosettaAPIWorker
             $headersEPCall = @{"Authorization"="Bearer " + $this.OAuthToken};
 
             #Var for URI
-            $deptsURI = $this.BaseURL + "employee-association/departments";
+            $deptsURI = $this.BaseURL + "employee-association/departments?limit=3000";
 
             #Var for Returned Status Code
             [int]$statusCode = 0
@@ -402,7 +403,61 @@ class RosettaAPIWorker
         return $departments
     }
 
-    
+    # Get Job Type IDs Information
+    [System.Collections.Generic.List[RosettaJobTypeID]] GetJobTypeIDs()
+    {
+        #Var for Return List Type
+        $jtids = [System.Collections.Generic.List[RosettaJobTypeID]]::new()
+
+        if($this.ChechOAuthToken() -eq $true)
+        {
+            #Var for Header of Endpoint Call
+            $headersEPCall = @{"Authorization"="Bearer " + $this.OAuthToken};
+
+            #Var for URI
+            $jtidsURI = $this.BaseURL + "employee-association/jobtypeids";
+
+            #Var for Returned Status Code
+            [int]$statusCode = 0
+
+            #Make Rest Call to EndPoint
+            $responseData = Invoke-RestMethod -Uri $jtidsURI -Method GET -Headers $headersEPCall -StatusCodeVariable statusCode;
+
+            #Check Returned Status Code
+            if($statusCode -eq 200)
+            {
+
+                #Go Through Returned Data
+                foreach($ucdJTID in $responseData)
+                {
+                    #Initiate Rosetta Job Type ID
+                    $jtid = [RosettaJobTypeID]::new();
+
+                    #Retrieve Job Type ID 
+                    if($null -ne $ucdJTID.PSObject.Properties['job_type_id'] -and $null -ne $ucdJTID.job_type_id)
+                    {
+                        $jtid.JobTypeID = $ucdJTID.job_type_id
+                    } 
+
+                    #Retrieve Job Type Description
+                    if($null -ne $ucdJTID.PSObject.Properties['job_type_description'] -and $null -ne $ucdJTID.job_type_description)
+                    {
+                        $jtid.JobTypeDescription = $ucdJTID.job_type_description
+                    }   
+
+                    # Add Job Type ID to Return List
+                    $jtids.Add($jtid);
+                }
+
+            }
+            
+        }#End of OAuth Token Check
+
+        return $jtids
+    }
+
+
+
 
     ##############
     # Extras
