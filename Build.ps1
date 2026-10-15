@@ -10,6 +10,9 @@ $outputPath = Join-Path $projectRoot 'Rosetta/Rosetta.psm1'
 # Class files in dependency order
 $classFiles = @(
     'RosettaPeopleSearchBy.ps1'
+    'RosettaStudentSearchBy.ps1'
+    'RosettaEmployeeSearchBy.ps1'
+    'RosettaPeoplePostLookupBy.ps1'
     'RosettaJobTypeID.ps1'
     'RosettaDepartment.ps1'
     'RosettaEmployeeAssociation.ps1'
