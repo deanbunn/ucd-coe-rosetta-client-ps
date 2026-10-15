@@ -38,10 +38,20 @@ $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -
 # Query Student Associations
 ################################
 
-#Pull list of Student Associations by Query Parameter
-$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::MAJORCODE,"GMAE");
+# #Pull list of Student Associations by Query Parameter
+# $lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::MAJORCODE,"GMAE");
 
-$lStudentAssocs;
+# $lStudentAssocs;
+
+################################
+# Query Employee Associations
+################################
+
+# #Pull list of Employee Associations by Query Parameter
+# $lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::IAMID,"1000090068");
+
+# $lEmployeeAssocs;
+
 
 ################################
 
@@ -100,16 +110,6 @@ $lStudentAssocs;
 #                     $nTotalCnt
 
 #                     $nRspnCnt
-
-#                     #= $responseHeaders["Content-Type"]
-
-#                     # #Go Through Returned Data
-#                     # foreach($ucdStdntAssoc in $responseData)
-#                     # {
-                        
-#                     # }
-
-                  
 
 #                     #Increment Offset
 #                     $nSrchRlstOffset += $nSrchRsltLimit;

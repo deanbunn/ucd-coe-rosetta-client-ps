@@ -36,6 +36,8 @@ class RosettaEmployeeAssociation
     [string]$ReportsToEmployeeID = ""
     [string]$IsHealthPosition = ""
     [string]$IsCampusPosition = ""
+    [string]$ModifiedDate = ""
+    [string]$CreateDate = ""
 
     RosettaEmployeeAssociation()
     {
