@@ -392,7 +392,126 @@ class RosettaAPIWorker
         return $rosettaStdntAssoc
     }
 
+    [RosettaPerson] ParseRosettaPersonData([object]$data)
+    {
+        #Initialize Returned Object
+        $rosettaPerson = [RosettaPerson]::new();
 
+        #Retrieve IAM ID
+        if($null -ne $data.PSObject.Properties['iam_id'] -and $null -ne $data.iam_id)
+        {
+            $rosettaPerson.IAMID = $data.iam_id;
+        }
+
+        #Retrieve Display Name
+        if($null -ne $data.PSObject.Properties['displayname'] -and $null -ne $data.displayname)
+        {
+            $rosettaPerson.DisplayName = $data.displayname;
+        }
+
+        #Retrieve ID Subsection 
+        if($null -ne $data.PSObject.Properties['id'] -and $null -ne $data.id)
+        {
+            #Retrieve IAM ID
+            if($null -ne $data.id.PSObject.Properties['iam_id'] -and $null -ne $data.id.iam_id)
+            {
+                $rosettaPerson.IAMID = $data.id.iam_id;
+            }
+
+            #Retrieve Login ID
+            if($null -ne $data.id.PSObject.Properties['login_id'] -and $null -ne $data.id.login_id)
+            {
+                $rosettaPerson.LoginID = $data.id.login_id;
+            }
+
+            #Retrieve Mothra ID
+            if($null -ne $data.id.PSObject.Properties['mothra_id'] -and $null -ne $data.id.mothra_id)
+            {
+                $rosettaPerson.MothraID = $data.id.mothra_id;
+            }
+
+            #Retrieve Employee ID
+            if($null -ne $data.id.PSObject.Properties['employee_id'] -and $null -ne $data.id.employee_id)
+            {
+                $rosettaPerson.EmployeeID = $data.id.employee_id;
+            }
+
+            #Retrieve Student ID
+            if($null -ne $data.id.PSObject.Properties['student_id'] -and $null -ne $data.id.student_id)
+            {
+                $rosettaPerson.StudentID = $data.id.student_id;
+            }
+
+            #Retrieve PIDM
+            if($null -ne $data.id.PSObject.Properties['pidm'] -and $null -ne $data.id.pidm)
+            {
+                $rosettaPerson.PIDM = $data.id.pidm;
+            }
+
+            #Retrieve UCNet ID
+            if($null -ne $data.id.PSObject.Properties['ucnet_id'] -and $null -ne $data.id.ucnet_id)
+            {
+                $rosettaPerson.UCNetID = $data.id.ucnet_id;
+            }
+
+            #Retrieve CPE ID
+            if($null -ne $data.id.PSObject.Properties['cpe_id'] -and $null -ne $data.id.cpe_id)
+            {
+                $rosettaPerson.CPIID = $data.id.cpe_id;
+            }
+
+            #Retrieve Affiliate ID
+            if($null -ne $data.id.PSObject.Properties['affiliate_id'] -and $null -ne $data.id.affiliate_id)
+            {
+                $rosettaPerson.AffiliateID = $data.id.affiliate_id;
+            }
+
+            #Retrieve Mail IDs Subsection
+            if($null -ne $data.id.PSObject.Properties['mail_id'] -and $null -ne $data.id.mail_id)
+            {
+                #Retrieve Campus Mail ID
+                if($null -ne $data.id.mail_id.PSObject.Properties['campus'] -and $null -ne $data.id.mail_id.campus)
+                {
+                    $rosettaPerson.MailIDCampus = $data.id.mail_id.campus;
+                }
+
+                #Retrieve Health Mail ID
+                if($null -ne $data.id.mail_id.PSObject.Properties['health'] -and $null -ne $data.id.mail_id.health)
+                {
+                    $rosettaPerson.MailIDHealth = $data.id.mail_id.health;
+                }
+
+            }#End of Mail IDs Subsection
+
+        }#End of IDs Subsection
+
+        #Retrieve Name Subsection 
+        if($null -ne $data.PSObject.Properties['name'] -and $null -ne $data.name)
+        {
+
+            #Retrieve Lived First Name
+            if($null -ne $data.name.PSObject.Properties['lived_first_name'] -and $null -ne $data.name.lived_first_name)
+            {
+                $rosettaPerson.LivedFirstName = $data.name.lived_first_name;
+            }
+
+            #Retrieve Lived Last Name
+            if($null -ne $data.name.PSObject.Properties['lived_last_name'] -and $null -ne $data.name.lived_last_name)
+            {
+                $rosettaPerson.LivedLastName = $data.name.lived_last_name;
+            }
+
+            #Retrieve Lived Pronouns
+            if($null -ne $data.name.PSObject.Properties['lived_pronouns'] -and $null -ne $data.name.lived_pronouns)
+            {
+                $rosettaPerson.LivedPronouns = $data.name.lived_pronouns;
+            }
+
+        }#End of Name Subsection
+
+
+        return $rosettaPerson
+    }
 
 
     ############################################

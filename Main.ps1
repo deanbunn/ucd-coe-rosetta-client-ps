@@ -55,95 +55,100 @@ $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -
 
 ################################
 
-# $searchBy = "majorcode"
-# $searchTerm = "GMAE"
+$searchBy = "iamids"
+$searchTerm = "1000505549,1000213158,1000572411,1000632980"
 
-# #Var for Search Result Limit
-# [int]$nSrchRsltLimit = 100;
+#Var for Search Result Limit
+[int]$nSrchRsltLimit = 100;
 
-# #Var for Search Result Offset
-# [int]$nSrchRlstOffset = 0;
+#Var for Search Result Offset
+[int]$nSrchRlstOffset = 0;
 
-# #Var for Retrieve More Search Results
-# [bool]$bRetrMoreSrchRslts = $true;
+#Var for Retrieve More Search Results
+[bool]$bRetrMoreSrchRslts = $true;
 
-# #Requests Loop
-# do
-# {
+#Requests Loop
+do
+{
 
-#     #Check OAuth Token
-#     if($rosettaAPIWrkr.ChechOAuthToken() -eq $true)
-#     {
+    #Check OAuth Token
+    if($rosettaAPIWrkr.ChechOAuthToken() -eq $true)
+    {
 
-#         #Var for Header of Endpoint Call
-#         $headersEPCall = @{"Authorization"="Bearer " + $rosettaAPIWrkr.OAuthToken};
+        #Var for Header of Endpoint Call
+        $headersEPCall = @{"Authorization"="Bearer " + $rosettaAPIWrkr.OAuthToken};
 
-#         #Var for URI
-#         $studentsURI = $rosettaAPIWrkr.BaseURL + "student-association?" + $searchBy + "=" + $searchTerm + "&offset=" + $nSrchRlstOffset.ToString() + "&limit=" + $nSrchRsltLimit.ToString() + "&count=true"; 
+        #Var for URI
+        $peopleURI = $rosettaAPIWrkr.BaseURL + "people?" + $searchBy + "=" + $searchTerm + "&offset=" + $nSrchRlstOffset.ToString() + "&limit=" + $nSrchRsltLimit.ToString() + "&count=true"; 
 
-#         #Var for Returned Status Code
-#         [int]$statusCode = 0;
+        #Var for Returned Status Code
+        [int]$statusCode = 0;
 
-#         #Var for X Total Count and X Response Count Header Information
-#         [int]$nTotalCnt = 0;
-#         [int]$nRspnCnt = 0;
+        #Var for X Total Count and X Response Count Header Information
+        [int]$nTotalCnt = 0;
+        [int]$nRspnCnt = 0;
 
-#         #Var for Returned Response Headers
-#         $responseHeaders = $null;
+        #Var for Returned Response Headers
+        $responseHeaders = $null;
 
-#         #Make Rest Call to EndPoint
-#         $responseData = Invoke-RestMethod -Uri $studentsURI -Method GET -Headers $headersEPCall -StatusCodeVariable statusCode -ResponseHeadersVariable responseHeaders;
+        #Make Rest Call to EndPoint
+        $responseData = Invoke-RestMethod -Uri $peopleURI -Method GET -Headers $headersEPCall -StatusCodeVariable statusCode -ResponseHeadersVariable responseHeaders;
 
-#         #Check Returned Status Code
-#         if($statusCode -eq 200)
-#         {
+        #Check Returned Status Code
+        if($statusCode -eq 200)
+        {
 
-#             if($null -ne $responseHeaders['x-total-count'] -and $null -ne $responseHeaders['x-response-count'] -and [int]::TryParse($responseHeaders['x-total-count'],[ref]$nTotalCnt) -and [int]::TryParse($responseHeaders['x-response-count'],[ref]$nRspnCnt))
-#             {
+            if($null -ne $responseHeaders['x-total-count'] -and $null -ne $responseHeaders['x-response-count'] -and [int]::TryParse($responseHeaders['x-total-count'],[ref]$nTotalCnt) -and [int]::TryParse($responseHeaders['x-response-count'],[ref]$nRspnCnt))
+            {
 
-#                 #Check Counts
-#                 if($nTotalCnt -gt 0 -and $nRspnCnt -gt 0)
-#                 {
+                #Check Counts
+                if($nTotalCnt -gt 0 -and $nRspnCnt -gt 0)
+                {
 
-#                     Write-Verbose "Made it here!" -Verbose
+                    Write-Verbose "Made it here!" -Verbose
 
-#                     $nTotalCnt
+                    $nTotalCnt
 
-#                     $nRspnCnt
+                    $nRspnCnt
 
-#                     #Increment Offset
-#                     $nSrchRlstOffset += $nSrchRsltLimit;
+                    foreach($usr in $responseData)
+                    {
+                        $usr.id | format-list
+                    }
 
-#                     #Check Offset to Total Count
-#                     if($nSrchRlstOffset -ge $nTotalCnt)
-#                     {
-#                         $bRetrMoreSrchRslts = $false;
-#                     }
+                    #Increment Offset
+                    $nSrchRlstOffset += $nSrchRsltLimit;
 
-#                 }
-#                 else
-#                 {
-#                     $bRetrMoreSrchRslts = $false;
-#                 }
+                    #Check Offset to Total Count
+                    if($nSrchRlstOffset -ge $nTotalCnt)
+                    {
+                        $bRetrMoreSrchRslts = $false;
+                    }
+
+                }
+                else
+                {
+                    $bRetrMoreSrchRslts = $false;
+                }
             
-#             }
-#             else
-#             {
-#                 $bRetrMoreSrchRslts = $false;
-#             }
+            }
+            else
+            {
+                $bRetrMoreSrchRslts = $false;
+            }
 
-#         }
-#         else
-#         {
-#             $bRetrMoreSrchRslts = $false;
-#         }
+        }
+        else
+        {
+            $bRetrMoreSrchRslts = $false;
+        }
 
-#     }
-#     else
-#     {
-#         $bRetrMoreSrchRslts = $false;
-#     }
+    }
+    else
+    {
+        $bRetrMoreSrchRslts = $false;
+    }
 
-# }
-# while($bRetrMoreSrchRslts -eq $true)
+}
+while($bRetrMoreSrchRslts -eq $true)
 
