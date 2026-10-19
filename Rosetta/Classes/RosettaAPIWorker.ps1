@@ -509,6 +509,169 @@ class RosettaAPIWorker
 
         }#End of Name Subsection
 
+        #Retrieve Email Addresses Node
+        if($null -ne $data.PSObject.Properties['email'] -and $null -ne $data.email)
+        {
+            #Retrieve Campus Email Address
+            if($null -ne $data.email.PSObject.Properties['campus'] -and $null -ne $data.email.campus)
+            {
+                $rosettaPerson.EmailAddressCampus = $data.email.campus;
+            }
+
+            #Retrieve Health Email Address
+            if($null -ne $data.email.PSObject.Properties['health'] -and $null -ne $data.email.health)
+            {
+                $rosettaPerson.EmailAddressHealth = $data.email.health;
+            }
+
+        }#End of Email Addresses Node
+
+        #Retrieve Provisioning Status Node
+        if($null -ne $data.PSObject.Properties['provisioning_status'] -and $null -ne $data.provisioning_status)
+        {
+            #Retrieve Primary Provisioning Status
+            if($null -ne $data.provisioning_status.PSObject.Properties['primary'] -and $null -ne $data.provisioning_status.primary)
+            {
+                $rosettaPerson.ProvisioningStatusPrimary = $data.provisioning_status.primary;
+            }
+
+            #Retrieve Employee Provisioning Status
+            if($null -ne $data.provisioning_status.PSObject.Properties['employee'] -and $null -ne $data.provisioning_status.employee)
+            {
+                $rosettaPerson.ProvisioningStatusEmployee = $data.provisioning_status.employee;
+            }
+
+            #Retrieve Faculty Provisioning Status
+            if($null -ne $data.provisioning_status.PSObject.Properties['faculty'] -and $null -ne $data.provisioning_status.faculty)
+            {
+                $rosettaPerson.ProvisioningStatusFaculty = $data.provisioning_status.faculty;
+            }
+
+            #Retrieve Student Provisioning Status
+            if($null -ne $data.provisioning_status.PSObject.Properties['student'] -and $null -ne $data.provisioning_status.student)
+            {
+                $rosettaPerson.ProvisioningStatusStudent = $data.provisioning_status.student;
+            }
+
+            #Retrieve Student Applicant Provisioning Status
+            if($null -ne $data.provisioning_status.PSObject.Properties['student_applicant'] -and $null -ne $data.provisioning_status.student_applicant)
+            {
+                $rosettaPerson.ProvisioningStatusStudentApplicant = $data.provisioning_status.student_applicant;
+            }
+
+            #Retrieve CPE Affiliate Provisioning Status
+            if($null -ne $data.provisioning_status.PSObject.Properties['cpe_affiliate'] -and $null -ne $data.provisioning_status.cpe_affiliate)
+            {
+                $rosettaPerson.ProvisioningStatusCPEAffiliate = $data.provisioning_status.cpe_affiliate;
+            }
+
+            #Retrieve Temporary Affiliate Provisioning Status
+            if($null -ne $data.provisioning_status.PSObject.Properties['temporary_affiliate'] -and $null -ne $data.provisioning_status.temporary_affiliate)
+            {
+                $rosettaPerson.ProvisioningStatusTemporaryAffiliate = $data.provisioning_status.temporary_affiliate;
+            }
+
+
+        }#End of Provisioning Status Node
+
+        #Retrieve Affiliations Node
+        if($null -ne $data.PSObject.Properties['affiliation'] -and $null -ne $data.affiliation)
+        {
+
+            #Retrieve Employee Affiliation
+            if($null -ne $data.affiliation.PSObject.Properties['employee'] -and $null -ne $data.affiliation.employee)
+            {
+
+                if($data.affiliation.employee.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.AffiliationEmployee = $true;
+                }
+                else
+                {
+                    $rosettaPerson.AffiliationEmployee = $false;
+                }
+               
+            }#End of Employee Affiliation
+
+            #Retrieve Faculty Affiliation
+            if($null -ne $data.affiliation.PSObject.Properties['faculty'] -and $null -ne $data.affiliation.faculty)
+            {
+
+                if($data.affiliation.faculty.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.AffiliationFaculty = $true;
+                }
+                else
+                {
+                    $rosettaPerson.AffiliationFaculty = $false;
+                }
+               
+            }#End of Faculty Affiliation
+
+            #Retrieve Temporary Affiliation
+            if($null -ne $data.affiliation.PSObject.Properties['temporary_affiliate'] -and $null -ne $data.affiliation.temporary_affiliate)
+            {
+
+                if($data.affiliation.temporary_affiliate.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.AffiliationTemporaryAffiliate = $true;
+                }
+                else
+                {
+                    $rosettaPerson.AffiliationTemporaryAffiliate = $false;
+                }
+               
+            }#End of Temporary Affiliation
+
+            #Retrieve Student Affiliation
+            if($null -ne $data.affiliation.PSObject.Properties['student'] -and $null -ne $data.affiliation.student)
+            {
+
+                if($data.affiliation.student.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.AffiliationStudent = $true;
+                }
+                else
+                {
+                    $rosettaPerson.AffiliationStudent = $false;
+                }
+               
+            }#End of Student Affiliation
+
+            #Retrieve Student Applicant Affiliation
+            if($null -ne $data.affiliation.PSObject.Properties['student_applicant'] -and $null -ne $data.affiliation.student_applicant)
+            {
+
+                if($data.affiliation.student_applicant.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.AffiliationStudentApplicant = $true;
+                }
+                else
+                {
+                    $rosettaPerson.AffiliationStudentApplicant = $false;
+                }
+               
+            }#End of Student Applicant Affiliation
+
+            #Retrieve Health Affiliation
+            if($null -ne $data.affiliation.PSObject.Properties['health_affiliate'] -and $null -ne $data.affiliation.health_affiliate)
+            {
+
+                if($data.affiliation.health_affiliate.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.AffiliationHealthAffiliate = $true;
+                }
+                else
+                {
+                    $rosettaPerson.AffiliationHealthAffiliate = $false;
+                }
+               
+            }#End of Health Affiliation
+
+        }#End of Affiliations Node
+
+        
+
 
         return $rosettaPerson
     }
