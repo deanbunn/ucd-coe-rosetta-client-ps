@@ -12,6 +12,43 @@ $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -
                                           (Get-Secret -Name "Rosetta-Client-ID" -AsPlainText -Vault "UCD-Identities"),
                                           (Get-Secret -Name "Rosetta-Client-Secret" -AsPlainText -Vault "UCD-Identities"));
 
+################################
+# People Get EndPoint Query
+################################
+#Pull People by Search Term
+$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::IAMIDSALLSTATE,"1000505549,1000213158,1000572411,1000632980");
+
+# "1000550201,1000016201,1000438403,1000227051"
+# "1000010578,1000438054,1000269748,1000004984"
+# "1000505549,1000213158,1000572411,1000632980"
+# "1000090068,1000054150,1000008378,1000326424"
+
+#Display Returned UCD Members
+foreach($ucdPerson in $lPeople)
+{
+
+    #Display UCD Person
+    $ucdPerson
+
+    #Display Employment Associations If Any
+    if($ucdPerson.EmployeeAssociations.Count -gt 0)
+    {
+        foreach($empAssoc in $ucdPerson.EmployeeAssociations)
+        {
+            $empAssoc
+        }
+    }
+
+    #Display Student Associations If Any
+    if($ucdPerson.StudentAssociations.Count -gt 0)
+    {
+        foreach($stdntAssoc in $ucdPerson.StudentAssociations)
+        {
+            $stdntAssoc
+        }
+    }
+
+}#End of lPeople Foreach
 
 ########################
 # Departments Listing
@@ -53,102 +90,4 @@ $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -
 # $lEmployeeAssocs;
 
 
-################################
-
-$searchBy = "iamids"
-$searchTerm = "1000505549,1000213158,1000572411,1000632980"
-
-#Var for Search Result Limit
-[int]$nSrchRsltLimit = 100;
-
-#Var for Search Result Offset
-[int]$nSrchRlstOffset = 0;
-
-#Var for Retrieve More Search Results
-[bool]$bRetrMoreSrchRslts = $true;
-
-#Requests Loop
-do
-{
-
-    #Check OAuth Token
-    if($rosettaAPIWrkr.ChechOAuthToken() -eq $true)
-    {
-
-        #Var for Header of Endpoint Call
-        $headersEPCall = @{"Authorization"="Bearer " + $rosettaAPIWrkr.OAuthToken};
-
-        #Var for URI
-        $peopleURI = $rosettaAPIWrkr.BaseURL + "people?" + $searchBy + "=" + $searchTerm + "&offset=" + $nSrchRlstOffset.ToString() + "&limit=" + $nSrchRsltLimit.ToString() + "&count=true"; 
-
-        #Var for Returned Status Code
-        [int]$statusCode = 0;
-
-        #Var for X Total Count and X Response Count Header Information
-        [int]$nTotalCnt = 0;
-        [int]$nRspnCnt = 0;
-
-        #Var for Returned Response Headers
-        $responseHeaders = $null;
-
-        #Make Rest Call to EndPoint
-        $responseData = Invoke-RestMethod -Uri $peopleURI -Method GET -Headers $headersEPCall -StatusCodeVariable statusCode -ResponseHeadersVariable responseHeaders;
-
-        #Check Returned Status Code
-        if($statusCode -eq 200)
-        {
-
-            if($null -ne $responseHeaders['x-total-count'] -and $null -ne $responseHeaders['x-response-count'] -and [int]::TryParse($responseHeaders['x-total-count'],[ref]$nTotalCnt) -and [int]::TryParse($responseHeaders['x-response-count'],[ref]$nRspnCnt))
-            {
-
-                #Check Counts
-                if($nTotalCnt -gt 0 -and $nRspnCnt -gt 0)
-                {
-
-                    Write-Verbose "Made it here!" -Verbose
-
-                    $nTotalCnt
-
-                    $nRspnCnt
-
-                    foreach($usr in $responseData)
-                    {
-                        $usr.id | format-list
-                    }
-
-                    #Increment Offset
-                    $nSrchRlstOffset += $nSrchRsltLimit;
-
-                    #Check Offset to Total Count
-                    if($nSrchRlstOffset -ge $nTotalCnt)
-                    {
-                        $bRetrMoreSrchRslts = $false;
-                    }
-
-                }
-                else
-                {
-                    $bRetrMoreSrchRslts = $false;
-                }
-            
-            }
-            else
-            {
-                $bRetrMoreSrchRslts = $false;
-            }
-
-        }
-        else
-        {
-            $bRetrMoreSrchRslts = $false;
-        }
-
-    }
-    else
-    {
-        $bRetrMoreSrchRslts = $false;
-    }
-
-}
-while($bRetrMoreSrchRslts -eq $true)
 

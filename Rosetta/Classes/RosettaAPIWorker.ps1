@@ -251,13 +251,13 @@ class RosettaAPIWorker
         #Retrieve Subdivision L4 ID
         if($null -ne $data.PSObject.Properties['subdivision_l4_id'] -and $null -ne $data.subdivision_l4_id)
         {
-            $rosettaEmployeeAssoc.SubDivisionL4ID = $data.subdivision_l4_id;
+            $rosettaEmployeeAssoc.SubdivisionL4ID = $data.subdivision_l4_id;
         }
 
         #Retrieve Subdivision L4 Title
         if($null -ne $data.PSObject.Properties['subdivision_l4_title'] -and $null -ne $data.subdivision_l4_title)
         {
-            $rosettaEmployeeAssoc.SubdivisionL4ID = $data.subdivision_l4_title;
+            $rosettaEmployeeAssoc.SubdivisionL4Title = $data.subdivision_l4_title;
         }
 
         #Retrieve Business Unit ID
@@ -457,7 +457,7 @@ class RosettaAPIWorker
             #Retrieve CPE ID
             if($null -ne $data.id.PSObject.Properties['cpe_id'] -and $null -ne $data.id.cpe_id)
             {
-                $rosettaPerson.CPIID = $data.id.cpe_id;
+                $rosettaPerson.CPEID = $data.id.cpe_id;
             }
 
             #Retrieve Affiliate ID
@@ -670,8 +670,233 @@ class RosettaAPIWorker
 
         }#End of Affiliations Node
 
-        
+        #Retrieve Employment Status Node
+        if($null -ne $data.PSObject.Properties['employment_status'] -and $null -ne $data.employment_status)
+        {
 
+            #Retrieve Academic Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_academic'] -and $null -ne $data.employment_status.is_academic)
+            {
+
+                if($data.employment_status.is_academic.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsAcademic = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsAcademic = $false;
+                }
+               
+            }#End of Academic Status
+
+            #Retrieve Academic Senate Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_academic_senate'] -and $null -ne $data.employment_status.is_academic_senate)
+            {
+
+                if($data.employment_status.is_academic_senate.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsAcademicSenate = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsAcademicSenate = $false;
+                }
+               
+            }#End of Academic Senate Status
+
+            #Retrieve Academic Federation Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_academic_federation'] -and $null -ne $data.employment_status.is_academic_federation)
+            {
+
+                if($data.employment_status.is_academic_federation.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsAcademicFederation = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsAcademicFederation = $false;
+                }
+               
+            }#End of Academic Federation Status
+
+            #Retrieve Faculty Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_faculty'] -and $null -ne $data.employment_status.is_faculty)
+            {
+
+                if($data.employment_status.is_faculty.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsFaculty = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsFaculty = $false;
+                }
+               
+            }#End of Faculty Status
+
+            #Retrieve Teaching Faculty Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_teaching_faculty'] -and $null -ne $data.employment_status.is_teaching_faculty)
+            {
+
+                if($data.employment_status.is_teaching_faculty.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsTeachingFaculty = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsTeachingFaculty = $false;
+                }
+               
+            }#End of Teaching Faculty Status
+
+            #Retrieve Ladder Rank Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_ladder_rank'] -and $null -ne $data.employment_status.is_ladder_rank)
+            {
+
+                if($data.employment_status.is_ladder_rank.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsLadderRank = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsLadderRank = $false;
+                }
+               
+            }#End of Ladder Rank Status
+
+            #Retrieve Without Salary Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_without_salary'] -and $null -ne $data.employment_status.is_without_salary)
+            {
+
+                if($data.employment_status.is_without_salary.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsWithoutSalary = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsWithoutSalary = $false;
+                }
+               
+            }#End of Without Salary Status
+
+            #Retrieve MSP Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_msp'] -and $null -ne $data.employment_status.is_msp)
+            {
+
+                if($data.employment_status.is_msp.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsMSP = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsMSP = $false;
+                }
+               
+            }#End of MSP Status
+
+            #Retrieve SSP Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_ssp'] -and $null -ne $data.employment_status.is_ssp)
+            {
+
+                if($data.employment_status.is_ssp.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsSSP = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsSSP = $false;
+                }
+               
+            }#End of SSP Status
+
+            #Retrieve Manager Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_manager'] -and $null -ne $data.employment_status.is_manager)
+            {
+
+                if($data.employment_status.is_manager.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsManager = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsManager = $false;
+                }
+               
+            }#End of Manager Status
+
+            #Retrieve Campus Employee Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_campus_employee'] -and $null -ne $data.employment_status.is_campus_employee)
+            {
+
+                if($data.employment_status.is_campus_employee.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsCampusEmployee = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsCampusEmployee = $false;
+                }
+               
+            }#End of Campus Employee Status
+
+            #Retrieve Health Employee Status
+            if($null -ne $data.employment_status.PSObject.Properties['is_health_employee'] -and $null -ne $data.employment_status.is_health_employee)
+            {
+
+                if($data.employment_status.is_health_employee.ToString().ToUpper() -eq "Y")
+                {
+                    $rosettaPerson.EmploymentIsHealthEmployee = $true;
+                }
+                else
+                {
+                    $rosettaPerson.EmploymentIsHealthEmployee = $false;
+                }
+               
+            }#End of Health Employee Status
+
+
+        }#End of Employment Status Node
+
+        #Check for Employee Associations to Parse
+        if($null -ne $data.PSObject.Properties['employee_association'] -and $null -ne $data.employee_association)
+        {
+            foreach($empAssoc in $data.employee_association)
+            {
+                #Parse Json Data for Employee Association
+                $parsedEmpAssoc = $this.ParseRosettaEmployeeAssocData($empAssoc);
+
+                #Fill in IAM ID for People Payroll Associations
+                if([string]::IsNullOrEmpty($rosettaPerson.IAMID) -eq $false)
+                {
+                    $parsedEmpAssoc.IAMID = $rosettaPerson.IAMID;
+                }
+
+                # Add Employee Association to Member
+                $rosettaPerson.EmployeeAssociations.Add($parsedEmpAssoc);
+            }
+        }
+
+        #Check for Student Associations to Parse
+        if($null -ne $data.PSObject.Properties['student_association'] -and $null -ne $data.student_association)
+        {   
+            foreach($stdntAssoc in $data.student_association)
+            {
+                #Parse Json Data for Student Association
+                $parsedStdntAssoc = $this.ParseRosettaStudentAssocData($stdntAssoc);
+
+                #Fill in IAM ID, Student ID, and PIDM for People Student Associations
+                if([string]::IsNullOrEmpty($rosettaPerson.IAMID) -eq $false)
+                {
+                    $parsedStdntAssoc.IAMID = $rosettaPerson.IAMID;
+                    $parsedStdntAssoc.StudentID = $rosettaPerson.StudentID;
+                    $parsedStdntAssoc.PIDM = $rosettaPerson.PIDM;
+                }
+
+                # Add Student Association to Member
+                $rosettaPerson.StudentAssociations.Add($parsedStdntAssoc);
+            }
+
+        }
 
         return $rosettaPerson
     }
@@ -1009,6 +1234,106 @@ class RosettaAPIWorker
 
     }
 
+    # Get Rosetta People by Search Term
+    [System.Collections.Generic.List[RosettaPerson]] GetRosettaPeopleBySearchTerm([string]$searchBy,[string]$searchTerm)
+    {
+
+        #Var for Return List Type
+        $people = [System.Collections.Generic.List[RosettaPerson]]::new();
+
+        #Var for Search Result Limit
+        [int]$nSrchRsltLimit = 400;
+
+        #Var for Search Result Offset
+        [int]$nSrchRlstOffset = 0;
+
+        #Var for Retrieve More Search Results
+        [bool]$bRetrMoreSrchRslts = $true;
+
+        #Requests Loop
+        do
+        {
+
+            #Check OAuth Token
+            if($this.ChechOAuthToken() -eq $true)
+            {
+
+                #Var for Header of Endpoint Call
+                $headersEPCall = @{"Authorization"="Bearer " + $this.OAuthToken};
+
+                #Var for URI
+                $peopleURI = $this.BaseURL + "people?" + $searchBy + "=" + $searchTerm + "&offset=" + $nSrchRlstOffset.ToString() + "&limit=" + $nSrchRsltLimit.ToString() + "&count=true"; 
+
+                #Var for Returned Status Code
+                [int]$statusCode = 0;
+
+                #Var for X Total Count and X Response Count Header Information
+                [int]$nTotalCnt = 0;
+                [int]$nRspnCnt = 0;
+
+                #Var for Returned Response Headers
+                $responseHeaders = $null;
+
+                #Make Rest Call to EndPoint
+                $responseData = Invoke-RestMethod -Uri $peopleURI -Method GET -Headers $headersEPCall -StatusCodeVariable statusCode -ResponseHeadersVariable responseHeaders;
+
+                #Check Returned Status Code
+                if($statusCode -eq 200)
+                {
+
+                    if($null -ne $responseHeaders['x-total-count'] -and $null -ne $responseHeaders['x-response-count'] -and [int]::TryParse($responseHeaders['x-total-count'],[ref]$nTotalCnt) -and [int]::TryParse($responseHeaders['x-response-count'],[ref]$nRspnCnt))
+                    {
+
+                        #Check Counts
+                        if($nTotalCnt -gt 0 -and $nRspnCnt -gt 0)
+                        {
+
+                            #Go Through Returned Data and Parse It Before Adding to Returned List
+                            foreach($ucdPerson in $responseData)
+                            {
+                                $people.Add($this.ParseRosettaPersonData($ucdPerson));
+                            }
+
+                            #Increment Offset
+                            $nSrchRlstOffset += $nSrchRsltLimit;
+
+                            #Check Offset to Total Count
+                            if($nSrchRlstOffset -ge $nTotalCnt)
+                            {
+                                $bRetrMoreSrchRslts = $false;
+                            }
+
+                        }
+                        else
+                        {
+                            $bRetrMoreSrchRslts = $false;
+                        }
+                    
+                    }
+                    else
+                    {
+                        $bRetrMoreSrchRslts = $false;
+                    }
+
+                }
+                else
+                {
+                    $bRetrMoreSrchRslts = $false;
+                }
+
+            }
+            else
+            {
+                $bRetrMoreSrchRslts = $false;
+            }
+
+        }
+        while($bRetrMoreSrchRslts -eq $true)
+
+        return $people
+
+    }
+
 
     ##############
     # Extras
@@ -1026,11 +1351,6 @@ class RosettaAPIWorker
 }
 
 
-# # Display all returned headers
-# $responseHeaders
-
-# $contentType = $responseHeaders["Content-Type"]
-# $requestId = $responseHeaders["X-Request-ID"]
 
 
 
