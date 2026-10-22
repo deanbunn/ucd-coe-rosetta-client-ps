@@ -906,6 +906,7 @@ class RosettaAPIWorker
     # Rosetta API Call Functions
     ############################################
 
+    # Check OAuth Token
     [bool] ChechOAuthToken()
     {
         #Var for Return Status
@@ -1334,6 +1335,63 @@ class RosettaAPIWorker
 
     }
 
+    #Post Mass Lookup for Rosetta Members by UCD IDs
+    [System.Collections.Generic.List[RosettaPerson]] PostMassRosettaPeopleLookup([string]$lookupBy,[System.Collections.Generic.HashSet[string]]$setMPL)
+    {
+
+        #Var for Return List Type
+        $people = [System.Collections.Generic.List[RosettaPerson]]::new();
+
+        #Var for Custom Multi People Lookup Post Body
+        $mplBody = @{};
+
+        #Dynamically Add Properties
+        $mplBody["limit"] = 0;
+        $mplBody[$lookupBy] = @();
+
+        #Load MPL Lookup ID Array
+        foreach($mplID in $setMPL)
+        {
+            $mplBody[$lookupBy] += $mplID
+        }
+
+        #Set Limit (Adding Extra Just in Case)
+        $mplBody["limit"] = [int]::Parse($setMPL.Count) + 10;
+
+        #Convert Post Body to Json Object
+        $jsonPostBody = $mplBody | ConvertTo-Json 
+
+        #Check OAuth Token
+        if($this.ChechOAuthToken() -eq $true)
+        {
+            #Var for Header of Endpoint Call
+            $headersEPCall = @{"Authorization"="Bearer " + $this.OAuthToken};
+
+            #Var for Returned Status Code
+            [int]$statusCode = 0;
+
+            #Var for URI
+            $peopleURI = $this.BaseURL + "people"
+
+            #Make Rest Call to EndPoint
+            $responseData = Invoke-RestMethod -Uri $peopleURI -Method POST -Headers $headersEPCall -StatusCodeVariable statusCode -Body $jsonPostBody -ContentType "application/json" -TimeoutSec 240;
+
+            #Check Returned Status Code
+            if($statusCode -eq 200)
+            {
+
+                #Go Through Returned Data and Parse It Before Adding to Returned List
+                foreach($ucdPerson in $responseData)
+                {
+                    $people.Add($this.ParseRosettaPersonData($ucdPerson));
+                }
+
+            }#End of Status Code Check
+
+        }#End of OAuth Token Check
+
+        return $people
+    }
 
     ##############
     # Extras
@@ -1342,9 +1400,6 @@ class RosettaAPIWorker
     #Notification Message
     #Write-Verbose "Hope this works!" -Verbose
     #Write-Verbose "Made it here!" -Verbose
-
-    ##Var for Regular EndPoint Headers Calls
-    #$headersEPCall = @{"Authorization"="Bearer " + $UCDAPIInfo.oauth_token;};
 
     ################
 

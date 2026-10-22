@@ -12,6 +12,7 @@ $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -
                                           (Get-Secret -Name "Rosetta-Client-ID" -AsPlainText -Vault "UCD-Identities"),
                                           (Get-Secret -Name "Rosetta-Client-Secret" -AsPlainText -Vault "UCD-Identities"));
 
+
 ################################
 # People Get EndPoint Query
 ################################
@@ -50,44 +51,79 @@ foreach($ucdPerson in $lPeople)
 
 }#End of lPeople Foreach
 
-########################
-# Departments Listing
-########################
-
-# #Pull Listing of Rosetta Departments
-# $lDepartments = $rosettaAPIWrkr.GetDepartments();
-
-# #Export Department Listing to CSV in Local Directory
-# $lDepartments | Export-Csv -Path ("Rosetta_Departments_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
-
-#########################
-# Job Type IDs Listing
-#########################
-
-# #Pull Listing of Rosetta Job Type IDs
-# $lJobTypeIDs = $rosettaAPIWrkr.GetJobTypeIDs();
-
-# #Export Job Type IDs Listing to CSV in Local Directory
-# $lJobTypeIDs | Export-Csv -Path ("Rosetta_JobTypeIDs_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
+################################################
+# HashSet for Unique IDs for Post People Lookup
+################################################
+$setMPLIDs = [System.Collections.Generic.HashSet[string]]::new();
 
 
 ################################
 # Query Student Associations
 ################################
 
-# #Pull list of Student Associations by Query Parameter
-# $lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::MAJORCODE,"GMAE");
+#Pull list of Student Associations by Query Parameter
+$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::MAJORCODE,"GMAE");
 
-# $lStudentAssocs;
+foreach($stndtAssoc in $lStudentAssocs)
+{
+    # Add Student's IAM to MPL IDs Set for People Post Lookup
+    $setMPLIDs.Add($stdntAssoc.IAMID)
+
+    #Display Student Association Info
+    $stndtAssoc
+}
 
 ################################
 # Query Employee Associations
 ################################
 
-# #Pull list of Employee Associations by Query Parameter
-# $lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::IAMID,"1000090068");
+#Pull list of Employee Associations by Query Parameter
+$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::IAMID,"1000550201");
 
-# $lEmployeeAssocs;
+#Display Employee Associations API Query Results
+foreach($empAssoc in $lEmployeeAssocs)
+{
+    # Add Employee's IAM to MPL IDs Set for People Post Lookup 
+    $setMPLIDs.Add($empAssoc.IAMID);
 
+    #Display Employee Association Info
+    $empAssoc;
+
+}
+
+#######################################
+# People Lookup by Post Query
+#######################################
+
+#Check MPL IDs Set Count
+if($setMPLIDs.Count -gt 0)
+{
+    #Pull List of Rosetta People by Post Lookup
+    $lUCDPeeps = $rosettaAPIWrkr.PostMassRosettaPeopleLookup([RosettaPeoplePostLookupBy]::IAMIDS,$setMPLIDs)
+
+    $lUCDPeeps | Format-List;
+
+}
+
+
+########################
+# Departments Listing
+########################
+
+#Pull Listing of Rosetta Departments
+$lDepartments = $rosettaAPIWrkr.GetDepartments();
+
+#Export Department Listing to CSV in Local Directory
+$lDepartments | Export-Csv -Path ("Rosetta_Departments_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
+
+#########################
+# Job Type IDs Listing
+#########################
+
+#Pull Listing of Rosetta Job Type IDs
+$lJobTypeIDs = $rosettaAPIWrkr.GetJobTypeIDs();
+
+#Export Job Type IDs Listing to CSV in Local Directory
+$lJobTypeIDs | Export-Csv -Path ("Rosetta_JobTypeIDs_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
 
 
