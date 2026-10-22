@@ -285,6 +285,7 @@ class RosettaAPIWorker
     [string]$ClientID
     [string]$ClientSecret
     [string]$OAuthToken
+    [int]$ErrorCount
     [datetime]$ExpiresIn
 
     #Constructor
@@ -294,6 +295,7 @@ class RosettaAPIWorker
         $this.TokenURL = $tokenURL
         $this.ClientID = $clientID
         $this.ClientSecret = $clientSecret
+        $this.ErrorCount = 0
         $this.ExpiresIn = (Get-Date).AddHours(-1)
     }
 
@@ -1213,6 +1215,7 @@ class RosettaAPIWorker
             else
             {
                 $bTokenStatus = $false
+                $this.ErrorCount++
             }
 
         }#End of ExpiresIn Check
@@ -1252,7 +1255,15 @@ class RosettaAPIWorker
                 }
 
             }
+            else
+            {
+                $this.ErrorCount++
+            }
             
+        }
+        else
+        {
+            $this.ErrorCount++    
         }#End of OAuth Token Check
 
         return $departments
@@ -1304,6 +1315,10 @@ class RosettaAPIWorker
                     $jtids.Add($jtid);
                 }
 
+            }
+            else
+            {
+                $this.ErrorCount++
             }
             
         }#End of OAuth Token Check
@@ -1396,12 +1411,14 @@ class RosettaAPIWorker
                 else
                 {
                     $bRetrMoreSrchRslts = $false;
+                    $this.ErrorCount++
                 }
 
             }
             else
             {
                 $bRetrMoreSrchRslts = $false;
+                $this.ErrorCount++
             }
 
         }
@@ -1497,12 +1514,14 @@ class RosettaAPIWorker
                 else
                 {
                     $bRetrMoreSrchRslts = $false;
+                    $this.ErrorCount++
                 }
 
             }
             else
             {
                 $bRetrMoreSrchRslts = $false;
+                $this.ErrorCount++
             }
 
         }
@@ -1597,12 +1616,14 @@ class RosettaAPIWorker
                 else
                 {
                     $bRetrMoreSrchRslts = $false;
+                    $this.ErrorCount++
                 }
 
             }
             else
             {
                 $bRetrMoreSrchRslts = $false;
+                $this.ErrorCount++
             }
 
         }
@@ -1663,8 +1684,16 @@ class RosettaAPIWorker
                     $people.Add($this.ParseRosettaPersonData($ucdPerson));
                 }
 
+            }
+            else
+            {
+                $this.ErrorCount++
             }#End of Status Code Check
 
+        }
+        else
+        {
+            $this.ErrorCount++
         }#End of OAuth Token Check
 
         return $people
