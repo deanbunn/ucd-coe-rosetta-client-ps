@@ -14,7 +14,7 @@ class RosettaEmployeeAssociation
     [string]$EmployeeClassificationDescription = ""
     [string]$Status = ""
     [string]$HireDate = ""
-    [string]$StartDate = ""
+    [string]$PositionEntryDate = ""
     [string]$FTEPercentage = ""
     [string]$JobTypeID = ""
     [string]$JobTypeDescription = ""

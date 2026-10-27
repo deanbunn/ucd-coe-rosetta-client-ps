@@ -185,9 +185,9 @@ class RosettaAPIWorker
         }
 
         #Retrieve Start Date
-        if($null -ne $data.PSObject.Properties['start_date'] -and $null -ne $data.start_date)
+        if($null -ne $data.PSObject.Properties['position_entry_date'] -and $null -ne $data.position_entry_date)
         {
-            $rosettaEmployeeAssoc.StartDate = $data.start_date;
+            $rosettaEmployeeAssoc.PositionEntryDate = $data.position_entry_date;
         }
 
         #Retrieve FTE Percentage
