@@ -1,10 +1,39 @@
 <#
-    script: Main.ps1
-    project: UCD-COE-Rosetta-Client
+.SYNOPSIS
+    Script demostrating how to access the UCD Rosetta API
+
+.DESCRIPTION
+    Queries the UCD Rosetta API for member identity information.
+
+.PARAMETER EndPoint
+    The Rosetta API Endpoint you're trying to query.
+
+.PARAMETER IdentityType
+    The identity type you're searching by
+
+.PARAMETER QueryFor
+    The identity data to query for in Rosetta
+
+.EXAMPLE
+    ./Main.ps1 -EndPoint People -IdentityType Login -QueryFor dbunn
 #>
 
 #Import Rosetta Module
 using module ./Rosetta/Rosetta.psm1
+
+#Script parameters
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$EndPoint,
+
+    [Parameter(Mandatory=$true)]
+    [string]$IdentityType,
+
+    [Parameter(Mandatory=$true)]
+    [string]$QueryFor
+)
+
+
 
 #Initialize Rosetta API Worker
 $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -AsPlainText -Vault "UCD-Identities"),
@@ -12,17 +41,27 @@ $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -
                                           (Get-Secret -Name "Rosetta-Client-ID" -AsPlainText -Vault "UCD-Identities"),
                                           (Get-Secret -Name "Rosetta-Client-Secret" -AsPlainText -Vault "UCD-Identities"));
 
-# List for Returned List of Rosetta People
+#List for Returned List of Rosetta People
 $lPeople = [System.Collections.Generic.List[RosettaPerson]]::new();
+
+#List for Returned List of Employee Associations
+$lEmployeeAssocs = [System.Collections.Generic.List[RosettaEmployeeAssociation]]::new();
+
+#List for Returned List of Student Associations
+$lStudentAssocs = [System.Collections.Generic.List[RosettaStudentAssociation]]::new();
+
+#List for Returned List of Job Type IDs
+$lJobTypeIDs = [System.Collections.Generic.List[RosettaJobTypeID]]::new();
+
+#List for Returned List of Departments
+$lDepartments = [System.Collections.Generic.List[RosettaDepartment]]::new();
 
 # HashSet for Unique IDs for Post People Lookup
 $setMPLIDs = [System.Collections.Generic.HashSet[string]]::new();
 
-# "1000550201,1000016201,1000438403,1000227051"
-# "1000010578,1000438054,1000269748,1000004984"
-# "1000505549,1000213158,1000572411,1000632980"
-# "1000090068,1000054150,1000008378,1000326424"
 
+
+<#
 ################################
 # People Get EndPoint Query
 ################################
@@ -37,6 +76,7 @@ $lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]:
 
 #Pull list of Student Associations by Query Parameter
 $lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::MAJORCODE,"GMAE");
+
 
 foreach($stdntAssoc in $lStudentAssocs)
 {
@@ -82,35 +122,38 @@ if($setMPLIDs.Count -gt 0)
 # Display List of Rosetta People
 #######################################
 
-#Display Returned UCD Members
-foreach($ucdPerson in $lPeople | Sort-Object -Property DisplayName)
+if($lPeople.Count -gt 0)
 {
-
-    #Separator with Display Name
-    Write-Output ("`n================= " + $ucdPerson.DisplayName + " ================`n")
-
-    #Display User Information
-    $ucdPerson
-
-    #Display Employment Associations If Any
-    if($ucdPerson.EmployeeAssociations.Count -gt 0)
+    foreach($ucdPerson in $lPeople | Sort-Object -Property DisplayName)
     {
-        foreach($empAssoc in $ucdPerson.EmployeeAssociations)
-        {
-            $empAssoc
-        }
-    }
 
-    #Display Student Associations If Any
-    if($ucdPerson.StudentAssociations.Count -gt 0)
-    {
-        foreach($stdntAssoc in $ucdPerson.StudentAssociations)
-        {
-            $stdntAssoc
-        }
-    }
+        #Separator with Display Name
+        Write-Output ("`n================= " + $ucdPerson.DisplayName + " ================`n")
 
-}#End of lPeople Foreach
+        #Display User Information
+        $ucdPerson
+
+        #Display Employment Associations If Any
+        if($ucdPerson.EmployeeAssociations.Count -gt 0)
+        {
+            foreach($empAssoc in $ucdPerson.EmployeeAssociations)
+            {
+                $empAssoc
+            }
+        }
+
+        #Display Student Associations If Any
+        if($ucdPerson.StudentAssociations.Count -gt 0)
+        {
+            foreach($stdntAssoc in $ucdPerson.StudentAssociations)
+            {
+                $stdntAssoc
+            }
+        }
+
+    }#End of lPeople Foreach
+}
+
 
 ########################
 # Departments Listing
@@ -133,3 +176,4 @@ $lJobTypeIDs = $rosettaAPIWrkr.GetJobTypeIDs();
 $lJobTypeIDs | Export-Csv -Path ("Rosetta_JobTypeIDs_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
 
 
+#>
