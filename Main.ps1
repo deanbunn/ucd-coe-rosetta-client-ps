@@ -5,17 +5,14 @@
 .DESCRIPTION
     Queries the UCD Rosetta API for member identity information.
 
-.PARAMETER EndPoint
-    The Rosetta API Endpoint you're trying to query.
+.PARAMETER QueryType
+    The Type of Rosetta Query
 
-.PARAMETER IdentityType
-    The identity type you're searching by
-
-.PARAMETER QueryFor
-    The identity data to query for in Rosetta
+.PARAMETER QueryTerm
+    The Search Term Used in the Query
 
 .EXAMPLE
-    ./Main.ps1 -EndPoint People -IdentityType Login -QueryFor dbunn
+    ./Main.ps1 -QueryType People-Login -QueryTerm dbunn
 #>
 
 #Import Rosetta Module
@@ -23,17 +20,44 @@ using module ./Rosetta/Rosetta.psm1
 
 #Script parameters
 param(
-    [Parameter(Mandatory=$true)]
-    [string]$EndPoint,
-
-    [Parameter(Mandatory=$true)]
-    [string]$IdentityType,
-
-    [Parameter(Mandatory=$true)]
-    [string]$QueryFor
+    [string]$QueryType,
+    [string]$QueryTerm,
+    [switch]$Help
 )
 
-
+#Display Help for Missing Values
+if($Help -or [string]::IsNullOrWhiteSpace($QueryType) -or [string]::IsNullOrWhiteSpace($QueryTerm))
+{
+    Write-Output(" ")
+    Write-Output("Argument Options:")
+    Write-Output("=======================")
+    Write-Output("people-iamid <iamid>")
+    Write-Output("people-iamids <iamid>")
+    Write-Output("people-iamids-all-state <iamids>")
+    Write-Output("people-login <userid>")
+    Write-Output("people-login-all-state <userid>")
+    Write-Output("people-email <emailaddress>")
+    Write-Output("people-employeeid <employeeid>")
+    Write-Output("people-studentid <studentid>")
+    Write-Output("people-pidm <pidm>")
+    Write-Output("people-mailid <mailid>")
+    Write-Output("people-mailid-all-state <mailid>")
+    Write-Output("people-department <departmentcode>")
+    Write-Output("employee-iamid <iamid>")
+    Write-Output("employee-departmentid <departmentid>")
+    Write-Output("employee-divisionid <divisionid>")
+    Write-Output("employee-subdivisionid <subdivisionid>")
+    Write-Output("employee-subdivisionl4id <subdivisionl4id>")
+    Write-Output("student-iam <iamid>")
+    Write-Output("student-pidm <pidm>")
+    Write-Output("student-studentid <studentid>")
+    Write-Output("student-majorcode <majorcode>")
+    Write-Output("student-collegecode <collegecode>")
+    Write-Output("departments show")
+    Write-Output("jobtypeids show")
+    Write-Output(" ")
+    Write-Output(" ")
+}#End of Help Section
 
 #Initialize Rosetta API Worker
 $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -AsPlainText -Vault "UCD-Identities"),
