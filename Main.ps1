@@ -1,63 +1,10 @@
 <#
-.SYNOPSIS
-    Script demostrating how to access the UCD Rosetta API
-
-.DESCRIPTION
-    Queries the UCD Rosetta API for member identity information.
-
-.PARAMETER QueryType
-    The Type of Rosetta Query
-
-.PARAMETER QueryTerm
-    The Search Term Used in the Query
-
-.EXAMPLE
-    ./Main.ps1 -QueryType People-Login -QueryTerm dbunn
+    script: Main.ps1
+    project: UCD-COE-Rosetta-Client-PS
 #>
 
-#Import Rosetta Module
+#Import Rosetta Module and Script Usage Help
 using module ./Rosetta/Rosetta.psm1
-
-#Script parameters
-param(
-    [string]$QueryType,
-    [string]$QueryTerm,
-    [switch]$Help
-)
-
-#Display Help for Missing Values
-if($Help -or [string]::IsNullOrWhiteSpace($QueryType) -or [string]::IsNullOrWhiteSpace($QueryTerm))
-{
-    Write-Output(" ")
-    Write-Output("Argument Options:")
-    Write-Output("=======================")
-    Write-Output("people-iamid <iamid>")
-    Write-Output("people-iamids <iamid>")
-    Write-Output("people-iamids-all-state <iamids>")
-    Write-Output("people-login <userid>")
-    Write-Output("people-login-all-state <userid>")
-    Write-Output("people-email <emailaddress>")
-    Write-Output("people-employeeid <employeeid>")
-    Write-Output("people-studentid <studentid>")
-    Write-Output("people-pidm <pidm>")
-    Write-Output("people-mailid <mailid>")
-    Write-Output("people-mailid-all-state <mailid>")
-    Write-Output("people-department <departmentcode>")
-    Write-Output("employee-iamid <iamid>")
-    Write-Output("employee-departmentid <departmentid>")
-    Write-Output("employee-divisionid <divisionid>")
-    Write-Output("employee-subdivisionid <subdivisionid>")
-    Write-Output("employee-subdivisionl4id <subdivisionl4id>")
-    Write-Output("student-iam <iamid>")
-    Write-Output("student-pidm <pidm>")
-    Write-Output("student-studentid <studentid>")
-    Write-Output("student-majorcode <majorcode>")
-    Write-Output("student-collegecode <collegecode>")
-    Write-Output("departments show")
-    Write-Output("jobtypeids show")
-    Write-Output(" ")
-    Write-Output(" ")
-}#End of Help Section
 
 #Initialize Rosetta API Worker
 $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -AsPlainText -Vault "UCD-Identities"),
@@ -84,51 +31,111 @@ $lDepartments = [System.Collections.Generic.List[RosettaDepartment]]::new();
 $setMPLIDs = [System.Collections.Generic.HashSet[string]]::new();
 
 
-
-<#
-################################
-# People Get EndPoint Query
-################################
-
-#Pull People by Search Term
-$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::IAMIDSALLSTATE,"1000505549,1000213158,1000572411,1000632980");
-
-
-################################
-# Query Student Associations
-################################
-
-#Pull list of Student Associations by Query Parameter
-$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::MAJORCODE,"GMAE");
-
-
-foreach($stdntAssoc in $lStudentAssocs)
+#Check for Supplied Script Arguments
+if($args.Count -eq 2)
 {
-    
-    # Add Student's IAM to MPL IDs Set for People Post Lookup 
-    $null = $setMPLIDs.Add($stdntAssoc.IAMID)
-    
-    #Display Student Association Info
-    $stdntAssoc
-    
+    #Vars for Processing Arguments
+    [string]$queryType = $args[0].ToString().ToLower().Trim();
+    [string]$searchFor = $args[1].ToString().Trim();
+
+    #Switch Statement to Process Arguments
+    switch($queryType)
+    {
+        "people-iamid"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::IAMID,$searchFor);}
+        "people-iamids"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::IAMIDS,$searchFor);}
+        "people-iamids-all-state"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::IAMIDSALLSTATE,$searchFor);}
+        "people-login"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::LOGINID,$searchFor);}
+        "people-login-all-state"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::LOGINIDALLSTATE,$searchFor);}
+        "people-email"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::EMAIL,$searchFor);}
+        "people-employeeid"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::EMPLOYEEID,$searchFor);}
+        "people-studentid"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::STUDENTID,$searchFor);}
+        "people-pidm"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::PIDM,$searchFor);}
+        "people-mailid"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::MAILID,$searchFor);}
+        "people-mailid-all-state"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::MAILIDALLSTATE,$searchFor);}
+        "people-department"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::DEPARTMENT,$searchFor);}
+        "employee-iamid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::IAMID,$searchFor);}
+        "employee-departmentid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::DEPARTMENTID,$searchFor);}
+        "employee-divisionid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::DIVISIONID,$searchFor);}
+        "employee-subdivisionid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::SUBDIVISIONID,$searchFor);}
+        "employee-subdivisionl4id"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::SUBDIVISIONL4ID,$searchFor);}
+        "student-iam"{$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::IAMID,$searchFor);}
+        "student-pidm"{$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::PIDM,$searchFor);}
+        "student-studentid"{$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::STUDENTID,$searchFor);}
+        "student-majorcode"{$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::MAJORCODE,$searchFor);}
+        "student-collegecode"{$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::COLLEGECODE,$searchFor);}
+        "departments"{$lDepartments = $rosettaAPIWrkr.GetDepartments();}
+        "jobtypeids"{$rosettaAPIWrkr.GetJobTypeIDs();}
+    }
+
+}
+else
+{
+    Write-Output @"
+
+    Argument Options: 
+    =======================
+    people-iamid <iamid>
+    people-iamids <iamid,iamid,iamid>
+    people-iamids-all-state <iamid,iamid,iamid>
+    people-login <userid>
+    people-login-all-state <userid>
+    people-email <emailaddress>
+    people-employeeid <employeeid>
+    people-studentid <studentid>
+    people-pidm <pidm>
+    people-mailid <mailid>
+    people-mailid-all-state <mailid>
+    people-department <departmentcode>
+    employee-iamid <iamid>
+    employee-departmentid <departmentid>
+    employee-divisionid <divisionid>
+    employee-subdivisionid <subdivisionid>
+    employee-subdivisionl4id <subdivisionl4id>
+    student-iam <iamid>
+    student-pidm <pidm>
+    student-studentid <studentid>
+    student-majorcode <majorcode>
+    student-collegecode <collegecode>
+    departments export
+    jobtypeids export
+
+"@
+
+    #Stop Script
+    exit;
 }
 
-################################
-# Query Employee Associations
-################################
 
-#Pull list of Employee Associations by Query Parameter
-$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::DEPARTMENTID,"024000");
+#######################################
+# Display Employee Associations
+#######################################
 
-#Display Employee Associations API Query Results
-foreach($empAssoc in $lEmployeeAssocs)
+if($lEmployeeAssocs.Count -gt 0)
 {
-    # Add Employee's IAM to MPL IDs Set for People Post Lookup 
-    $null = $setMPLIDs.Add($empAssoc.IAMID);
+    foreach($empAssoc in $lEmployeeAssocs)
+    {
+        # Add Employee's IAM to MPL IDs Set for People Post Lookup 
+        $null = $setMPLIDs.Add($empAssoc.IAMID);
 
-    #Display Employee Association Info
-    $empAssoc;
+        #Display Employee Association Info
+        $empAssoc;
+    }
+}
 
+#######################################
+# Display Student Associations 
+#######################################
+
+if($lStudentAssocs.Count -gt 0)
+{
+    foreach($stdntAssoc in $lStudentAssocs)
+    {
+        # Add Student's IAM to MPL IDs Set for People Post Lookup 
+        $null = $setMPLIDs.Add($stdntAssoc.IAMID)
+        
+        #Display Student Association Info
+        $stdntAssoc 
+    }
 }
 
 #######################################
@@ -143,7 +150,7 @@ if($setMPLIDs.Count -gt 0)
 }
 
 #######################################
-# Display List of Rosetta People
+# Display Rosetta People
 #######################################
 
 if($lPeople.Count -gt 0)
@@ -180,24 +187,25 @@ if($lPeople.Count -gt 0)
 
 
 ########################
-# Departments Listing
+# Display Departments
 ########################
 
-#Pull Listing of Rosetta Departments
-$lDepartments = $rosettaAPIWrkr.GetDepartments();
-
-#Export Department Listing to CSV in Local Directory
-$lDepartments | Export-Csv -Path ("Rosetta_Departments_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
+if($lDepartments.Count -gt 0)
+{
+    #Export Department Listing to CSV in Local Directory
+    $lDepartments | Export-Csv -Path ("Rosetta_Departments_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
+}
 
 #########################
-# Job Type IDs Listing
+# Display Job Type IDs 
 #########################
 
-#Pull Listing of Rosetta Job Type IDs
-$lJobTypeIDs = $rosettaAPIWrkr.GetJobTypeIDs();
+if($lJobTypeIDs.Count -gt 0)
+{
+    #Export Job Type IDs Listing to CSV in Local Directory
+    $lJobTypeIDs | Export-Csv -Path ("Rosetta_JobTypeIDs_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
 
-#Export Job Type IDs Listing to CSV in Local Directory
-$lJobTypeIDs | Export-Csv -Path ("Rosetta_JobTypeIDs_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
+}
 
 
-#>
+

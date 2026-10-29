@@ -1,6 +1,8 @@
 ## UCD COE Rosetta Client for PowerShell
 
-A quick repository demonstrating how to access the UCD Rosetta API. Please contact the Campus Identity team to obtain the required credentials for your API account.
+A simple repository demonstrating how to access the UCD Rosetta API. You can integrate the Rosetta module into another project or use this repository as a standalone client.
+
+To obtain the API credentials required for authentication, please contact the Campus Identity team.
 
 ### Resource Links
 
@@ -11,3 +13,53 @@ A quick repository demonstrating how to access the UCD Rosetta API. Please conta
 ```bash
 pwsh -NoProfile -File ./Build.ps1
 ```
+
+### Script Usage Examples
+
+Get Members by IAM IDs
+```powershell
+./Main.py people-iamids "1000550201,1000016201,1000438403,1000227051"
+```
+Get Member by Login
+```powershell
+./Main.py people-login dbunn
+```
+Get Member by Email Address
+```powershell
+./Main.py people-email dbunn@ucdavis.edu
+```
+Get All Members in a Department
+```powershell
+./Main.py people-department "024000"
+```
+Get Employee Associations by Department
+```powershell
+./Main.py employee-departmentid "024000"
+```
+
+### Script Argument Options
+
+- people-iamid \<iamid\>
+- people-iamids \<iamid,iamid,iamid\>
+- people-iamids-all-state \<iamid,iamid,iamid\>
+- people-login \<userid\>
+- people-login-all-state \<userid\>
+- people-email \<emailaddress\>
+- people-employeeid \<employeeid\>
+- people-studentid \<studentid\>
+- people-pidm \<pidm\>
+- people-mailid \<mailid\>
+- people-mailid-all-state \<mailid\>
+- people-department \<departmentcode\>
+- employee-iamid \<iamid\>
+- employee-departmentid \<departmentid\>
+- employee-divisionid \<divisionid\>
+- employee-subdivisionid \<subdivisionid\>
+- employee-subdivisionl4id \<subdivisionl4id\>
+- student-iam \<iamid\>
+- student-pidm \<pidm\>
+- student-studentid \<studentid\>
+- student-majorcode \<majorcode\>
+- student-collegecode \<collegecode\>
+- departments show
+- jobtypeids show

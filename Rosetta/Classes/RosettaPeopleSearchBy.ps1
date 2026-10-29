@@ -11,6 +11,7 @@ class RosettaPeopleSearchBy
     static [string]$EMAIL = "email"
     static [string]$EMPLOYEEID = "employeeid"
     static [string]$STUDENTID = "studentid"
+    static [string]$PIDM = "pidm"
     static [string]$MAILID = "mailid"
     static [string]$MAILIDALLSTATE = "affiliationState=all&mailid"
     static [string]$DEPARTMENT = "department"

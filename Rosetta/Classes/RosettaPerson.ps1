@@ -45,6 +45,8 @@ class RosettaPerson
     [bool]$EmploymentIsManager = $false
     [bool]$EmploymentIsCampusEmployee = $false
     [bool]$EmploymentIsHealthEmployee = $false
+    [string]$CreateDate = ""
+    [string]$ModifiedDate = ""
     [System.Collections.Generic.List[RosettaEmployeeAssociation]]$EmployeeAssociations
     [System.Collections.Generic.List[RosettaStudentAssociation]]$StudentAssociations
 

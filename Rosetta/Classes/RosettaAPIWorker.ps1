@@ -304,18 +304,6 @@ class RosettaAPIWorker
             $rosettaEmployeeAssoc.IsCampusPosition = $data.is_campus_position;
         }
 
-        #Retrieve Modification Date
-        if($null -ne $data.PSObject.Properties['modified_date'] -and $null -ne $data.modified_date)
-        {
-            $rosettaEmployeeAssoc.ModifiedDate = $data.modified_date;
-        }
-
-        #Retrieve Creation Date
-        if($null -ne $data.PSObject.Properties['create_date'] -and $null -ne $data.create_date)
-        {
-            $rosettaEmployeeAssoc.CreateDate = $data.create_date;
-        }
-
 
         return $rosettaEmployeeAssoc
     }
@@ -409,6 +397,18 @@ class RosettaAPIWorker
         if($null -ne $data.PSObject.Properties['displayname'] -and $null -ne $data.displayname)
         {
             $rosettaPerson.DisplayName = $data.displayname;
+        }
+
+        #Retrieve Modification Date
+        if($null -ne $data.PSObject.Properties['modified_date'] -and $null -ne $data.modified_date)
+        {
+            $rosettaPerson.ModifiedDate = $data.modified_date;
+        }
+
+        #Retrieve Creation Date
+        if($null -ne $data.PSObject.Properties['create_date'] -and $null -ne $data.create_date)
+        {
+            $rosettaPerson.CreateDate = $data.create_date;
         }
 
         #Retrieve ID Subsection 

@@ -19,6 +19,7 @@ class RosettaPeopleSearchBy
     static [string]$EMAIL = "email"
     static [string]$EMPLOYEEID = "employeeid"
     static [string]$STUDENTID = "studentid"
+    static [string]$PIDM = "pidm"
     static [string]$MAILID = "mailid"
     static [string]$MAILIDALLSTATE = "affiliationState=all&mailid"
     static [string]$DEPARTMENT = "department"
@@ -144,7 +145,7 @@ class RosettaEmployeeAssociation
     [string]$EmployeeClassificationDescription = ""
     [string]$Status = ""
     [string]$HireDate = ""
-    [string]$StartDate = ""
+    [string]$PositionEntryDate = ""
     [string]$FTEPercentage = ""
     [string]$JobTypeID = ""
     [string]$JobTypeDescription = ""
@@ -166,8 +167,7 @@ class RosettaEmployeeAssociation
     [string]$ReportsToEmployeeID = ""
     [string]$IsHealthPosition = ""
     [string]$IsCampusPosition = ""
-    [string]$ModifiedDate = ""
-    [string]$CreateDate = ""
+
 
     RosettaEmployeeAssociation()
     {
@@ -258,6 +258,8 @@ class RosettaPerson
     [bool]$EmploymentIsManager = $false
     [bool]$EmploymentIsCampusEmployee = $false
     [bool]$EmploymentIsHealthEmployee = $false
+    [string]$CreateDate = ""
+    [string]$ModifiedDate = ""
     [System.Collections.Generic.List[RosettaEmployeeAssociation]]$EmployeeAssociations
     [System.Collections.Generic.List[RosettaStudentAssociation]]$StudentAssociations
 
@@ -462,9 +464,9 @@ class RosettaAPIWorker
         }
 
         #Retrieve Start Date
-        if($null -ne $data.PSObject.Properties['start_date'] -and $null -ne $data.start_date)
+        if($null -ne $data.PSObject.Properties['position_entry_date'] -and $null -ne $data.position_entry_date)
         {
-            $rosettaEmployeeAssoc.StartDate = $data.start_date;
+            $rosettaEmployeeAssoc.PositionEntryDate = $data.position_entry_date;
         }
 
         #Retrieve FTE Percentage
@@ -581,18 +583,6 @@ class RosettaAPIWorker
             $rosettaEmployeeAssoc.IsCampusPosition = $data.is_campus_position;
         }
 
-        #Retrieve Modification Date
-        if($null -ne $data.PSObject.Properties['modified_date'] -and $null -ne $data.modified_date)
-        {
-            $rosettaEmployeeAssoc.ModifiedDate = $data.modified_date;
-        }
-
-        #Retrieve Creation Date
-        if($null -ne $data.PSObject.Properties['create_date'] -and $null -ne $data.create_date)
-        {
-            $rosettaEmployeeAssoc.CreateDate = $data.create_date;
-        }
-
 
         return $rosettaEmployeeAssoc
     }
@@ -686,6 +676,18 @@ class RosettaAPIWorker
         if($null -ne $data.PSObject.Properties['displayname'] -and $null -ne $data.displayname)
         {
             $rosettaPerson.DisplayName = $data.displayname;
+        }
+
+        #Retrieve Modification Date
+        if($null -ne $data.PSObject.Properties['modified_date'] -and $null -ne $data.modified_date)
+        {
+            $rosettaPerson.ModifiedDate = $data.modified_date;
+        }
+
+        #Retrieve Creation Date
+        if($null -ne $data.PSObject.Properties['create_date'] -and $null -ne $data.create_date)
+        {
+            $rosettaPerson.CreateDate = $data.create_date;
         }
 
         #Retrieve ID Subsection 
