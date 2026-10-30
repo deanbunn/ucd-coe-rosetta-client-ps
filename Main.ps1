@@ -67,6 +67,14 @@ if($args.Count -eq 2)
         "jobtypeids"{$rosettaAPIWrkr.GetJobTypeIDs();}
     }
 
+    #Keeping Track of Number of Errors in Error Count Property on API Worker Instance. 
+    #Leaving Resetting of Error Count Up to the Developer and How They Want It to Work
+    #Display Number of Errors if Any Occurred
+    if($rosettaAPIWrkr.ErrorCount -gt 0)
+    {
+        Write-Output($rosettaAPIWrkr.ErrorCount.ToString() + " error(s) occurred during API calls");
+    }
+
 }
 else
 {
