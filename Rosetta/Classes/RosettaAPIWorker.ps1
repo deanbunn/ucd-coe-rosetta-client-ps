@@ -101,6 +101,111 @@ class RosettaAPIWorker
 
     }
 
+    [RosettaIdentity] ParseRosettaIdentityData([object]$data)
+    {
+        #Initialize Returned Object
+        $rosettaIdentity = [RosettaIdentity]::new();
+
+        #Retrieve IAM ID
+        if($null -ne $data.PSObject.Properties['iam_id'] -and $null -ne $data.iam_id)
+        {
+            $rosettaIdentity.IAMID = $data.iam_id;
+        }
+
+        #Retrieve Display Name
+        if($null -ne $data.PSObject.Properties['display_name'] -and $null -ne $data.display_name)
+        {
+            $rosettaIdentity.DisplayName = $data.display_name;
+        }
+
+        #Retrieve Campus Email
+        if($null -ne $data.PSObject.Properties['campus_email'] -and $null -ne $data.campus_email)
+        {
+            $rosettaIdentity.CampusEmail = $data.campus_email;
+        }
+
+        #Retrieve Login ID
+        if($null -ne $data.PSObject.Properties['login_id'] -and $null -ne $data.login_id)
+        {
+            $rosettaIdentity.LoginID = $data.login_id;
+        }
+
+        #Retrieve Employee ID
+        if($null -ne $data.PSObject.Properties['employee_id'] -and $null -ne $data.employee_id)
+        {
+            $rosettaIdentity.EmployeeID = $data.employee_id;
+        }
+
+        #Retrieve Student ID
+        if($null -ne $data.PSObject.Properties['student_id'] -and $null -ne $data.student_id)
+        {
+            $rosettaIdentity.StudentID = $data.student_id;
+        }
+
+        #Retrieve Mothra ID
+        if($null -ne $data.PSObject.Properties['mothra_id'] -and $null -ne $data.mothra_id)
+        {
+            $rosettaIdentity.MothraID = $data.mothra_id;
+        }
+
+        #Retrieve UCNET ID
+        if($null -ne $data.PSObject.Properties['ucnet_id'] -and $null -ne $data.ucnet_id)
+        {
+            $rosettaIdentity.UCNETID = $data.ucnet_id;
+        }
+
+        #Retrieve PIDM ID
+        if($null -ne $data.PSObject.Properties['pidm'] -and $null -ne $data.pidm)
+        {
+            $rosettaIdentity.PIDM = $data.pidm;
+        }
+
+        #Retrieve Cosmos ID
+        if($null -ne $data.PSObject.Properties['cosmos_id'] -and $null -ne $data.cosmos_id)
+        {
+            $rosettaIdentity.CosmosID = $data.cosmos_id;
+        }
+
+        #Retrieve CPE ID
+        if($null -ne $data.PSObject.Properties['cpe_id'] -and $null -ne $data.cpe_id)
+        {
+            $rosettaIdentity.CPEID = $data.cpe_id;
+        }
+
+        #Retrieve Health Affiliate ID
+        if($null -ne $data.PSObject.Properties['health_affiliate_id'] -and $null -ne $data.health_affiliate_id)
+        {
+            $rosettaIdentity.HealthAffiliateID = $data.health_affiliate_id;
+        }
+
+        #Retrieve UCANR ID
+        if($null -ne $data.PSObject.Properties['ucanr_id'] -and $null -ne $data.ucanr_id)
+        {
+            $rosettaIdentity.UCANRID = $data.ucanr_id;
+        }
+
+        #Retrieve USDA WHNRC ID
+        if($null -ne $data.PSObject.Properties['usda_whnrc_id'] -and $null -ne $data.usda_whnrc_id)
+        {
+            $rosettaIdentity.USDAWHNRCID = $data.usda_whnrc_id;
+        }
+
+        #Retrieve Affiliate ID
+        if($null -ne $data.PSObject.Properties['affiliate_id'] -and $null -ne $data.affiliate_id)
+        {
+            $rosettaIdentity.AffiliateID = $data.affiliate_id;
+        }
+
+        #Retrieve Department ID
+        if($null -ne $data.PSObject.Properties['department_id'] -and $null -ne $data.department_id)
+        {
+            $rosettaIdentity.DepartmentID = $data.department_id;
+        }
+
+
+        return $rosettaIdentity
+    }
+
     [RosettaEmployeeAssociation] ParseRosettaEmployeeAssocData([object]$data)
     {
         #Initialize Returned Object
