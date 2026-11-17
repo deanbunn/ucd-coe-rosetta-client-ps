@@ -51,6 +51,11 @@ Get Employee Associations by Department
 - people-mailid \<mailid\>
 - people-mailid-all-state \<mailid\>
 - people-department \<departmentcode\>
+- identity-iamid \<iamid\>
+- identity-login \<userid\>
+- identity-employeeid \<employeeid\>
+- identity-email \<emailaddress\>
+- identity-departmentid \<departmentid\>
 - employee-iamid \<iamid\>
 - employee-departmentid \<departmentid\>
 - employee-divisionid \<divisionid\>

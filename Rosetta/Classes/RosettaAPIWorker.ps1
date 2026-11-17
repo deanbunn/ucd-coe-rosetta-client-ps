@@ -1097,11 +1097,55 @@ class RosettaAPIWorker
         return $departments
     }
 
+    # Get Identities by Search Term
+    [System.Collections.Generic.List[RosettaIdentity]] GetRosettaIdentitiesBySearchTerm([string]$searchBy,[string]$searchTerm)
+    {
+        #Var for Return List Type
+        $rosettaIdents = [System.Collections.Generic.List[RosettaIdentity]]::new();
+
+        #Check OAuth Token Status
+        if($this.ChechOAuthToken() -eq $true)
+        {
+            #Var for Header of Endpoint Call
+            $headersEPCall = @{"Authorization"="Bearer " + $this.OAuthToken};
+
+            #Var for URI
+            $identsURI = $this.BaseURL + "identity?" + $searchBy + "=" + $searchTerm
+
+            #Var for Returned Status Code
+            [int]$statusCode = 0
+
+            #Make Rest Call to EndPoint
+            $responseData = Invoke-RestMethod -Uri $identsURI -Method GET -Headers $headersEPCall -StatusCodeVariable statusCode;
+
+            #Check Returned Status Code
+            if($statusCode -eq 200)
+            {
+                #Go Through Returned Data
+                foreach($ucdIdenty in $responseData)
+                {
+                    $rosettaIdents.Add($this.ParseRosettaIdentityData($ucdIdenty))
+                }
+            }
+            else
+            {
+                $this.ErrorCount++
+            }
+            
+        }
+        else
+        {
+            $this.ErrorCount++    
+        }#End of OAuth Token Check
+
+        return $rosettaIdents
+    }
+
     # Get Job Type IDs Information
     [System.Collections.Generic.List[RosettaJobTypeID]] GetJobTypeIDs()
     {
         #Var for Return List Type
-        $jtids = [System.Collections.Generic.List[RosettaJobTypeID]]::new()
+        $jtids = [System.Collections.Generic.List[RosettaJobTypeID]]::new();
 
         if($this.ChechOAuthToken() -eq $true)
         {

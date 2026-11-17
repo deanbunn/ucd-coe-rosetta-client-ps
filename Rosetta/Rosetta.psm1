@@ -79,6 +79,70 @@ class RosettaPeoplePostLookupBy
 }
 
 # ----------------------------------------
+# Source: RosettaIdentityPostLookupBy.ps1
+# ----------------------------------------
+
+
+
+class RosettaIdentityPostLookupBy
+{
+	static [string]$IAMIDS = "iamids"
+	static [string]$EMAILS = "emails"
+	static [string]$LOGINIDS = "loginids"
+	static [string]$EMPLOYEEIDS = "employeeids"
+	static [string]$MOTHRAIDS = "mothraids"
+}
+
+# ----------------------------------------
+# Source: RosettaIdentitySearchBy.ps1
+# ----------------------------------------
+
+
+
+class RosettaIdentitySearchBy
+{
+    static [string]$IAMID = "iamid"
+    static [string]$LOGINID = "loginid"
+    static [string]$EMAIL = "email"
+    static [string]$EMPLOYEEID = "employeeid"
+    static [string]$MOTHRAID = "mothraid"
+    static [string]$DEPARTMENTID = "departmentid"
+
+}
+
+# ----------------------------------------
+# Source: RosettaIdentity.ps1
+# ----------------------------------------
+
+
+
+class RosettaIdentity
+{
+    
+    [string]$IAMID = ""
+    [string]$DisplayName = ""
+    [string]$CampusEmail = ""
+    [string]$LoginID = ""
+    [string]$EmployeeID = ""
+    [string]$StudentID = ""
+    [string]$MothraID = ""
+    [string]$UCNETID = ""
+    [string]$PIDM = ""
+    [string]$CosmosID = ""
+    [string]$CPEID = ""
+    [string]$HealthAffiliateID = ""
+    [string]$UCANRID = ""
+    [string]$USDAWHNRCID= ""
+    [string]$AffiliateID = ""
+    [string]$DepartmentID = ""
+
+    RosettaIdentity()
+    {
+
+    }
+}
+
+# ----------------------------------------
 # Source: RosettaJobTypeID.ps1
 # ----------------------------------------
 
@@ -378,6 +442,111 @@ class RosettaAPIWorker
        
         return $rosettaDept
 
+    }
+
+    [RosettaIdentity] ParseRosettaIdentityData([object]$data)
+    {
+        #Initialize Returned Object
+        $rosettaIdentity = [RosettaIdentity]::new();
+
+        #Retrieve IAM ID
+        if($null -ne $data.PSObject.Properties['iam_id'] -and $null -ne $data.iam_id)
+        {
+            $rosettaIdentity.IAMID = $data.iam_id;
+        }
+
+        #Retrieve Display Name
+        if($null -ne $data.PSObject.Properties['display_name'] -and $null -ne $data.display_name)
+        {
+            $rosettaIdentity.DisplayName = $data.display_name;
+        }
+
+        #Retrieve Campus Email
+        if($null -ne $data.PSObject.Properties['campus_email'] -and $null -ne $data.campus_email)
+        {
+            $rosettaIdentity.CampusEmail = $data.campus_email;
+        }
+
+        #Retrieve Login ID
+        if($null -ne $data.PSObject.Properties['login_id'] -and $null -ne $data.login_id)
+        {
+            $rosettaIdentity.LoginID = $data.login_id;
+        }
+
+        #Retrieve Employee ID
+        if($null -ne $data.PSObject.Properties['employee_id'] -and $null -ne $data.employee_id)
+        {
+            $rosettaIdentity.EmployeeID = $data.employee_id;
+        }
+
+        #Retrieve Student ID
+        if($null -ne $data.PSObject.Properties['student_id'] -and $null -ne $data.student_id)
+        {
+            $rosettaIdentity.StudentID = $data.student_id;
+        }
+
+        #Retrieve Mothra ID
+        if($null -ne $data.PSObject.Properties['mothra_id'] -and $null -ne $data.mothra_id)
+        {
+            $rosettaIdentity.MothraID = $data.mothra_id;
+        }
+
+        #Retrieve UCNET ID
+        if($null -ne $data.PSObject.Properties['ucnet_id'] -and $null -ne $data.ucnet_id)
+        {
+            $rosettaIdentity.UCNETID = $data.ucnet_id;
+        }
+
+        #Retrieve PIDM ID
+        if($null -ne $data.PSObject.Properties['pidm'] -and $null -ne $data.pidm)
+        {
+            $rosettaIdentity.PIDM = $data.pidm;
+        }
+
+        #Retrieve Cosmos ID
+        if($null -ne $data.PSObject.Properties['cosmos_id'] -and $null -ne $data.cosmos_id)
+        {
+            $rosettaIdentity.CosmosID = $data.cosmos_id;
+        }
+
+        #Retrieve CPE ID
+        if($null -ne $data.PSObject.Properties['cpe_id'] -and $null -ne $data.cpe_id)
+        {
+            $rosettaIdentity.CPEID = $data.cpe_id;
+        }
+
+        #Retrieve Health Affiliate ID
+        if($null -ne $data.PSObject.Properties['health_affiliate_id'] -and $null -ne $data.health_affiliate_id)
+        {
+            $rosettaIdentity.HealthAffiliateID = $data.health_affiliate_id;
+        }
+
+        #Retrieve UCANR ID
+        if($null -ne $data.PSObject.Properties['ucanr_id'] -and $null -ne $data.ucanr_id)
+        {
+            $rosettaIdentity.UCANRID = $data.ucanr_id;
+        }
+
+        #Retrieve USDA WHNRC ID
+        if($null -ne $data.PSObject.Properties['usda_whnrc_id'] -and $null -ne $data.usda_whnrc_id)
+        {
+            $rosettaIdentity.USDAWHNRCID = $data.usda_whnrc_id;
+        }
+
+        #Retrieve Affiliate ID
+        if($null -ne $data.PSObject.Properties['affiliate_id'] -and $null -ne $data.affiliate_id)
+        {
+            $rosettaIdentity.AffiliateID = $data.affiliate_id;
+        }
+
+        #Retrieve Department ID
+        if($null -ne $data.PSObject.Properties['department_id'] -and $null -ne $data.department_id)
+        {
+            $rosettaIdentity.DepartmentID = $data.department_id;
+        }
+
+
+        return $rosettaIdentity
     }
 
     [RosettaEmployeeAssociation] ParseRosettaEmployeeAssocData([object]$data)
@@ -1271,11 +1440,55 @@ class RosettaAPIWorker
         return $departments
     }
 
+    # Get Identities by Search Term
+    [System.Collections.Generic.List[RosettaIdentity]] GetRosettaIdentitiesBySearchTerm([string]$searchBy,[string]$searchTerm)
+    {
+        #Var for Return List Type
+        $rosettaIdents = [System.Collections.Generic.List[RosettaIdentity]]::new();
+
+        #Check OAuth Token Status
+        if($this.ChechOAuthToken() -eq $true)
+        {
+            #Var for Header of Endpoint Call
+            $headersEPCall = @{"Authorization"="Bearer " + $this.OAuthToken};
+
+            #Var for URI
+            $identsURI = $this.BaseURL + "identity?" + $searchBy + "=" + $searchTerm
+
+            #Var for Returned Status Code
+            [int]$statusCode = 0
+
+            #Make Rest Call to EndPoint
+            $responseData = Invoke-RestMethod -Uri $identsURI -Method GET -Headers $headersEPCall -StatusCodeVariable statusCode;
+
+            #Check Returned Status Code
+            if($statusCode -eq 200)
+            {
+                #Go Through Returned Data
+                foreach($ucdIdenty in $responseData)
+                {
+                    $rosettaIdents.Add($this.ParseRosettaIdentityData($ucdIdenty))
+                }
+            }
+            else
+            {
+                $this.ErrorCount++
+            }
+            
+        }
+        else
+        {
+            $this.ErrorCount++    
+        }#End of OAuth Token Check
+
+        return $rosettaIdents
+    }
+
     # Get Job Type IDs Information
     [System.Collections.Generic.List[RosettaJobTypeID]] GetJobTypeIDs()
     {
         #Var for Return List Type
-        $jtids = [System.Collections.Generic.List[RosettaJobTypeID]]::new()
+        $jtids = [System.Collections.Generic.List[RosettaJobTypeID]]::new();
 
         if($this.ChechOAuthToken() -eq $true)
         {

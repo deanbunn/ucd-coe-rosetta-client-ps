@@ -15,6 +15,9 @@ $rosettaAPIWrkr = [RosettaAPIWorker]::new((Get-Secret -Name "Rosetta-Base-Url" -
 #List for Returned List of Rosetta People
 $lPeople = [System.Collections.Generic.List[RosettaPerson]]::new();
 
+#List for Returned List of Rosetta Identities
+$lIdentities = [System.Collections.Generic.List[RosettaIdentity]]::new();
+
 #List for Returned List of Employee Associations
 $lEmployeeAssocs = [System.Collections.Generic.List[RosettaEmployeeAssociation]]::new();
 
@@ -53,6 +56,11 @@ if($args.Count -eq 2)
         "people-mailid"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::MAILID,$searchFor);}
         "people-mailid-all-state"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::MAILIDALLSTATE,$searchFor);}
         "people-department"{$lPeople = $rosettaAPIWrkr.GetRosettaPeopleBySearchTerm([RosettaPeopleSearchBy]::DEPARTMENT,$searchFor);}
+        "identity-iamid"{$lIdentities = $rosettaAPIWrkr.GetRosettaIdentitiesBySearchTerm([RosettaIdentitySearchBy]::IAMID,$searchFor);}
+        "identity-login"{$lIdentities = $rosettaAPIWrkr.GetRosettaIdentitiesBySearchTerm([RosettaIdentitySearchBy]::LOGINID,$searchFor);}
+        "identity-employeeid"{$lIdentities = $rosettaAPIWrkr.GetRosettaIdentitiesBySearchTerm([RosettaIdentitySearchBy]::EMPLOYEEID,$searchFor);}
+        "identity-email"{$lIdentities = $rosettaAPIWrkr.GetRosettaIdentitiesBySearchTerm([RosettaIdentitySearchBy]::EMAIL,$searchFor);}
+        "identity-departmentid"{$lIdentities = $rosettaAPIWrkr.GetRosettaIdentitiesBySearchTerm([RosettaIdentitySearchBy]::DEPARTMENTID,$searchFor);}
         "employee-iamid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::IAMID,$searchFor);}
         "employee-departmentid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::DEPARTMENTID,$searchFor);}
         "employee-divisionid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::DIVISIONID,$searchFor);}
@@ -94,6 +102,11 @@ else
     people-mailid <mailid>
     people-mailid-all-state <mailid>
     people-department <departmentcode>
+    identity-iamid <iamid>
+    identity-login <userid>
+    identity-employeeid <employeeid>
+    identity-email <emailaddress>
+    identity-departmentid <departmentid>
     employee-iamid <iamid>
     employee-departmentid <departmentid>
     employee-divisionid <divisionid>
@@ -193,6 +206,17 @@ if($lPeople.Count -gt 0)
     }#End of lPeople Foreach
 }
 
+########################
+# Display Identities
+########################
+if($lIdentities.Count -gt 0)
+{
+    foreach($ucdIdent in $lIdentities | Sort-Object -Property DisplayName)
+    {
+        #Display Identity Information
+        $ucdIdent
+    }
+}
 
 ########################
 # Display Departments
