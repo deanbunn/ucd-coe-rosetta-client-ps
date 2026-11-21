@@ -40,6 +40,9 @@ $setMILIDs = [System.Collections.Generic.HashSet[string]]::new();
 [string]$bulkIdentityLookupType = "";
 [string]$bulkIdentityFileLocation = "";
 
+#Var for CSV Report Name
+[string]$rptName = "Rosetta_Report_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv";
+
 
 #Check for Supplied Script Arguments
 if($args.Count -eq 2)
@@ -68,6 +71,10 @@ if($args.Count -eq 2)
         "identity-employeeid"{$lIdentities = $rosettaAPIWrkr.GetRosettaIdentitiesBySearchTerm([RosettaIdentitySearchBy]::EMPLOYEEID,$searchFor);}
         "identity-email"{$lIdentities = $rosettaAPIWrkr.GetRosettaIdentitiesBySearchTerm([RosettaIdentitySearchBy]::EMAIL,$searchFor);}
         "identity-departmentid"{$lIdentities = $rosettaAPIWrkr.GetRosettaIdentitiesBySearchTerm([RosettaIdentitySearchBy]::DEPARTMENTID,$searchFor);}
+        "identity-bulk-iamids"{$bulkIdentityLookupType = [RosettaIdentityPostLookupBy]::IAMIDS; $bulkIdentityFileLocation = $searchFor;}
+        "identity-bulk-logins"{$bulkIdentityLookupType = [RosettaIdentityPostLookupBy]::LOGINIDS; $bulkIdentityFileLocation = $searchFor;}
+        "identity-bulk-emails"{$bulkIdentityLookupType = [RosettaIdentityPostLookupBy]::EMAILS; $bulkIdentityFileLocation = $searchFor;}
+        "identity-bulk-employeeids"{$bulkIdentityLookupType = [RosettaIdentityPostLookupBy]::EMPLOYEEIDS; $bulkIdentityFileLocation = $searchFor;}
         "employee-iamid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::IAMID,$searchFor);}
         "employee-departmentid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::DEPARTMENTID,$searchFor);}
         "employee-divisionid"{$lEmployeeAssocs = $rosettaAPIWrkr.GetRosettaEmployeeAssociationBySearchTerm([RosettaEmployeeSearchBy]::DIVISIONID,$searchFor);}
@@ -80,7 +87,7 @@ if($args.Count -eq 2)
         "student-collegecode"{$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::COLLEGECODE,$searchFor);}
         "departments"{$lDepartments = $rosettaAPIWrkr.GetDepartments();}
         "jobtypeids"{$rosettaAPIWrkr.GetJobTypeIDs();}
-        "identity-bulk-login"{$bulkIdentityLookupType = [RosettaIdentityPostLookupBy]::LOGINIDS; $bulkIdentityFileLocation = $searchFor;}
+        
     }
 
     #Keeping Track of Number of Errors in Error Count Property on API Worker Instance. 
@@ -115,6 +122,10 @@ else
     identity-employeeid <employeeid>
     identity-email <emailaddress>
     identity-departmentid <departmentid>
+    identity-bulk-iamids <full/path/to/ids/file>
+    identity-bulk-logins <full/path/to/ids/file>
+    identity-bulk-emails <full/path/to/ids/file>
+    identity-bulk-employeeids <full/path/to/ids/file>
     employee-iamid <iamid>
     employee-departmentid <departmentid>
     employee-divisionid <divisionid>
@@ -151,12 +162,12 @@ if([string]::IsNullOrEmpty($bulkIdentityLookupType) -eq $false -and [string]::Is
         
     }
 
-    #Post Lookup for UCD Identities
-    $lIdentities = $rosettaAPIWrkr.PostMassRosettaIdentitiesLookup($bulkIdentityLookupType,$setMILIDs);
-    
-}
+    #Post Lookup for UCD Identities and Export to CSV
+    #$rosettaAPIWrkr.PostMassRosettaIdentitiesLookup($bulkIdentityLookupType,$setMILIDs) | Export-Csv -Path $rptName -NoTypeInformation;
 
-#PostMassRosettaIdentitiesLookup([string]$lookupBy,[System.Collections.Generic.HashSet[string]]$setMIL)
+    #Post Lookup for UCD Identities and Display Output
+    $lIdentities = $rosettaAPIWrkr.PostMassRosettaIdentitiesLookup($bulkIdentityLookupType,$setMILIDs);
+}
 
 #######################################
 # Display Employee Associations

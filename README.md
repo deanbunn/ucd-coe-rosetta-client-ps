@@ -56,6 +56,10 @@ Get Employee Associations by Department
 - identity-employeeid \<employeeid\>
 - identity-email \<emailaddress\>
 - identity-departmentid \<departmentid\>
+- identity-bulk-iamids \<full/path/to/ids/file\>
+- identity-bulk-logins \<full/path/to/ids/file\>
+- identity-bulk-emails \<full/path/to/ids/file\>
+- identity-bulk-employeeids \<full/path/to/ids/file\>
 - employee-iamid \<iamid\>
 - employee-departmentid \<departmentid\>
 - employee-divisionid \<divisionid\>
