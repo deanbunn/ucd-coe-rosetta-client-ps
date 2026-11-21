@@ -1484,6 +1484,68 @@ class RosettaAPIWorker
         return $rosettaIdents
     }
 
+    # Post Mass Lookup for Rosetta Identities by UCD IDs
+    [System.Collections.Generic.List[RosettaIdentity]] PostMassRosettaIdentitiesLookup([string]$lookupBy,[System.Collections.Generic.HashSet[string]]$setMIL)
+    {
+        #Var for Return List Type
+        $rosettaIdents = [System.Collections.Generic.List[RosettaIdentity]]::new();
+
+        #Var for Custom Multi Identity Lookup Post Body
+        $milBody = @{};
+
+        #Dynamically Add Properties
+        $milBody[$lookupBy] = @();
+
+        #Load MIL Lookup ID Array
+        foreach($milID in $setMIL)
+        {
+            $milBody[$lookupBy] += $milID
+        }
+        
+        #Convert Post Body to Json Object
+        $jsonPostBody = $milBody | ConvertTo-Json
+
+        #Check OAuth Token
+        if($this.ChechOAuthToken() -eq $true)
+        {
+            #Var for Header of Endpoint Call
+            $headersEPCall = @{"Authorization"="Bearer " + $this.OAuthToken};
+
+            #Var for Returned Status Code
+            [int]$statusCode = 0;
+
+            #Var for URI
+            $identityURI = $this.BaseURL + "identity"
+
+            #Make Rest Call to EndPoint
+            $responseData = Invoke-RestMethod -Uri $identityURI -Method POST -Headers $headersEPCall -StatusCodeVariable statusCode -Body $jsonPostBody -ContentType "application/json" -TimeoutSec 240;
+
+            #Check Returned Status Code
+            if($statusCode -eq 200)
+            {
+
+                #Go Through Returned Data and Parse It Before Adding to Returned List
+                foreach($ucdIdenty in $responseData)
+                {
+                    $rosettaIdents.Add($this.ParseRosettaIdentityData($ucdIdenty));
+                }
+
+            }
+            else
+            {
+                $this.ErrorCount++
+            }#End of Status Code Check
+
+        }
+        else
+        {
+            $this.ErrorCount++
+        }#End of OAuth Token Check
+
+
+        return $rosettaIdents
+    }
+
     # Get Job Type IDs Information
     [System.Collections.Generic.List[RosettaJobTypeID]] GetJobTypeIDs()
     {

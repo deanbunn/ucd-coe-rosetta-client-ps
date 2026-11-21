@@ -33,6 +33,13 @@ $lDepartments = [System.Collections.Generic.List[RosettaDepartment]]::new();
 # HashSet for Unique IDs for Post People Lookup
 $setMPLIDs = [System.Collections.Generic.HashSet[string]]::new();
 
+# HashSet for Unique IDs for Post Identity Lookup
+$setMILIDs = [System.Collections.Generic.HashSet[string]]::new();
+
+#Vars for Bulk Identity Lookups
+[string]$bulkIdentityLookupType = "";
+[string]$bulkIdentityFileLocation = "";
+
 
 #Check for Supplied Script Arguments
 if($args.Count -eq 2)
@@ -73,6 +80,7 @@ if($args.Count -eq 2)
         "student-collegecode"{$lStudentAssocs = $rosettaAPIWrkr.GetRosettaStudentAssociationBySearchTerm([RosettaStudentSearchBy]::COLLEGECODE,$searchFor);}
         "departments"{$lDepartments = $rosettaAPIWrkr.GetDepartments();}
         "jobtypeids"{$rosettaAPIWrkr.GetJobTypeIDs();}
+        "identity-bulk-login"{$bulkIdentityLookupType = [RosettaIdentityPostLookupBy]::LOGINIDS; $bulkIdentityFileLocation = $searchFor;}
     }
 
     #Keeping Track of Number of Errors in Error Count Property on API Worker Instance. 
@@ -126,6 +134,29 @@ else
     exit;
 }
 
+#######################################
+# Bulk Identity Lookups
+#######################################
+if([string]::IsNullOrEmpty($bulkIdentityLookupType) -eq $false -and [string]::IsNullOrEmpty($bulkIdentityFileLocation) -eq $false)
+{
+
+    #Loop Through the UCD Identity File
+    foreach($line in Get-Content -Path $bulkIdentityFileLocation)
+    {
+        if([string]::IsNullOrEmpty($line) -eq $false)
+        {
+            # Add UCD Identity to MIL IDs Set for Identity Post Lookup 
+            $null = $setMILIDs.Add($line.ToString().Trim());
+        }
+        
+    }
+
+    #Post Lookup for UCD Identities
+    $lIdentities = $rosettaAPIWrkr.PostMassRosettaIdentitiesLookup($bulkIdentityLookupType,$setMILIDs);
+    
+}
+
+#PostMassRosettaIdentitiesLookup([string]$lookupBy,[System.Collections.Generic.HashSet[string]]$setMIL)
 
 #######################################
 # Display Employee Associations
